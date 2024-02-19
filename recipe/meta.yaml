@@ -40,7 +40,7 @@ test:
   commands:
     - pip check
     # Python tests require CUDA 11.5
-    # - {{ PYTHON }} -m warp.test 
+    # - {{ PYTHON }} -m warp.test
   requires:
     - pip
     - pytest
