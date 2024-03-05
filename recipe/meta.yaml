@@ -48,7 +48,7 @@ test:
 about:
   home: https://github.com/NVIDIA/warp
   summary: 'A Python framework for high-performance simulation and graphics programming.'
-  license: LicenseRef-NVIDIA-Software-License-warp
+  license: LicenseRef-NvidiaProprietary
   license_file:
     - copyright.py
     - LICENSE.md
