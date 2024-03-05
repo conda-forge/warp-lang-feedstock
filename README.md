@@ -5,7 +5,7 @@ Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/warp-lang-feeds
 
 Home: https://github.com/NVIDIA/warp
 
-Package license: LicenseRef-NVIDIA-warp
+Package license: LicenseRef-NVIDIA-Software-License-warp
 
 Summary: A Python framework for high-performance simulation and graphics programming.
 
