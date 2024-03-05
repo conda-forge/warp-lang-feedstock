@@ -1,5 +1,5 @@
 {% set name = "warp-lang" %}
-{% set version = "0.13.0" %}
+{% set version = "0.15.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 6a25fd674196b5ca0e88adf4deed9672a267b2c59ade8a6e3edef88c26cf4563
+  sha256: 2186eaa963868642f965bd787bd881cd6c0e3caabc44811af8f9dd1cb3ae2f93
   patches:
     - 01-find_g++_env.patch
     - 02-add_macro_def_build.patch
@@ -48,7 +48,7 @@ test:
 about:
   home: https://github.com/NVIDIA/warp
   summary: 'A Python framework for high-performance simulation and graphics programming.'
-  license: LicenseRef-NVIDIA-Software-License-warp
+  license: LicenseRef-NvidiaProprietary
   license_file:
     - copyright.py
     - LICENSE.md

@@ -1,7 +1,7 @@
 diff --git a/build_llvm.py b/build_llvm.py
 --- a/build_llvm.py
 +++ b/build_llvm.py
-@@ -48,11 +48,6 @@ def fetch_prebuilt_libraries():
+@@ -47,11 +47,6 @@ def fetch_prebuilt_libraries():
  def build_from_source_for_arch(args, arch, llvm_source):
      # Check out the LLVM project Git repository, unless it already exists
      if not os.path.exists(llvm_source):
@@ -11,5 +11,5 @@ diff --git a/build_llvm.py b/build_llvm.py
 -        subprocess.check_call([sys.executable, "-m", "pip", "install", "ninja"])
 -
          from git import Repo
- 
+
          repo_url = "https://github.com/llvm/llvm-project.git"
