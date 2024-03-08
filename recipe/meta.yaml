@@ -1,5 +1,5 @@
 {% set name = "warp-lang" %}
-{% set version = "0.15.1" %}
+{% set version = "1.0.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 17be213fa31302ed92837a8c4a6e458037271b08997a993f9660146f3edc1ff6
+  sha256: 7273f4bd22a3571c357540fb0ad7dc8b9ac2578cdb1a06e0cbd0ff8907d1e064
   patches:
     - 01-find_g++_env.patch
     - 02-add_macro_def_build.patch
