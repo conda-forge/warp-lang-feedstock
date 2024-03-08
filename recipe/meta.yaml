@@ -24,14 +24,17 @@ requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    - {{ compiler('cuda') }}  # [cuda_compiler_version != "None"]
     - cmake
     - ninja
   host:
+    - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
     - python
     - pip
     - gitpython
     - numpy
   run:
+    - __cuda  # [cuda_compiler_version != "None"]
     - python
     - numpy
     - jax  # [not win]
@@ -45,7 +48,7 @@ test:
   commands:
     - pip check
     # Python tests require CUDA 11.5
-    # - {{ PYTHON }} -m warp.test
+    - {{ PYTHON }} -m warp.test  # [cuda_compiler_version != "None"]
   requires:
     - pip
     - pytest
