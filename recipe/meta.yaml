@@ -33,6 +33,11 @@ requirements:
     - numpy
   run:
     - python
+    - numpy
+    - jax
+    - scipy
+    - treelib
+    - typeguard
 
 test:
   imports:
