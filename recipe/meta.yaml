@@ -12,6 +12,7 @@ source:
     - 01-find_g++_env.patch
     - 02-add_macro_def_build.patch
     - 03-install_deps_llvm_conda.patch
+    - 04-find_nvcc_env.patch
 
 build:
   script:
