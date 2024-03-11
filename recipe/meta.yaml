@@ -18,7 +18,7 @@ build:
     - {{ PYTHON }} build_lib.py
     - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation --no-cache-dir
   number: 0
-  skip: true  # [osx]
+  skip: true  # [osx or cuda_compiler_version == "11.2"]
 
 requirements:
   build:
@@ -34,7 +34,7 @@ requirements:
     - gitpython
     - numpy
   run:
-    - __cuda  # [cuda_compiler_version != "None"]
+    - __cuda   # [cuda_compiler_version != "None"]
     - python
     - numpy
     - jax  # [not win]
