@@ -34,7 +34,7 @@ requirements:
   run:
     - python
     - numpy
-    - jax
+    - jax  # [not win]
     - scipy
     - treelib
     - typeguard
