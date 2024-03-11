@@ -15,9 +15,13 @@ source:
     - 04-find_nvcc_env.patch
 
 build:
+  string: cpu{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
+  string: cuda{{ cuda_compiler_version | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
   script:
-    - export CUTLASS_PATH=$(pwd)
-    - export CUDA_INSTALL_PATH=$(which nvcc | awk -F'/bin/nvcc' '{print $1}')
+    - set CUTLASS_PATH=%cd%  # [win]
+    - for /f "delims=" %i in ('where nvcc') do set CUDA_INSTALL_PATH=%~dpi  # [win]
+    - export CUTLASS_PATH=$(pwd)  # [unix]
+    - export CUDA_INSTALL_PATH=$(which nvcc | awk -F'/bin/nvcc' '{print $1}')  # [unix]
     - {{ PYTHON }} build_lib.py
     - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation --no-cache-dir
   number: 0
@@ -50,8 +54,9 @@ test:
     - warp
   commands:
     - pip check
-    - {{ PYTHON }} -m warp.test  # [cuda_compiler_version != "None"]
+    - python -m warp.tests --maxjobs 1
   requires:
+    - python
     - pip
     - pytest
 
