@@ -53,7 +53,8 @@ test:
     - warp
   commands:
     - pip check
-    - python -m warp.tests -s autodetect
+    # Testing main functionalities to avoid OOM errors
+    - python -m warp.tests -s autodetect -p 'test_c*.py' -p 'test_m*.py' -p 'test_s*.py'
   requires:
     - python
     - pip
