@@ -23,7 +23,7 @@ build:
     - export CUDA_INSTALL_PATH=$(which nvcc | awk -F'/bin/nvcc' '{print $1}')  # [unix]
     - {{ PYTHON }} build_lib.py
     - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation --no-cache-dir
-  number: 0
+  number: 1
   skip: true  # [osx or cuda_compiler_version == "11.2"]
   skip: true  # [win and cuda_compiler_version != "None"]
 
