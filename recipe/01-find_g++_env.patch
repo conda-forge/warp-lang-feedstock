@@ -40,15 +40,3 @@ diff --git a/warp/build_dll.py b/warp/build_dll.py
              run_cmd(link_cmd)
 
              # Strip symbols to reduce the binary size
-diff --git a/warp/native/cutlass/tools/library/scripts/pycutlass/src/pycutlass/compiler.py b/warp/native/cutlass/tools/library/scripts/pycutlass/src/pycutlass/compiler.py
---- a/warp/native/cutlass/tools/library/scripts/pycutlass/src/pycutlass/compiler.py
-+++ b/warp/native/cutlass/tools/library/scripts/pycutlass/src/pycutlass/compiler.py
-@@ -305,7 +305,7 @@ class ArtifactManager:
-
-         # compile the host code
-         options = compilation_options.get()
--        cmd = "echo '%s'|g++ -x c++ -fpermissive -w -fPIC" % source_buffer_host
-+        cmd = "echo '%s'|$CXX -x c++ -fpermissive -w -fPIC" % source_buffer_host
-         for opt in options:
-             opt = opt.decode("utf-8")
-             if opt not in ['-default-device', '-std=c++11', '-Xcicc', '-Xllc'] and '-arch=sm_' not in opt:
