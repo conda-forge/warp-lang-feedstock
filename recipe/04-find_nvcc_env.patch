@@ -15,7 +15,7 @@ diff --git a/warp/build_dll.py b/warp/build_dll.py
 
              with ScopedTimer("build_cuda", active=args.verbose):
                  run_cmd(cuda_cmd)
-@@ -326,10 +330,10 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
+@@ -326,17 +325,17 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
              cu_out = cu_path + ".o"
 
              if mode == "debug":
@@ -28,3 +28,11 @@ diff --git a/warp/build_dll.py b/warp/build_dll.py
 
              with ScopedTimer("build_cuda", active=args.verbose):
                  run_cmd(cuda_cmd)
+
+                 ld_inputs.append(quote(cu_out))
+                 ld_inputs.append(
+-                    f'-L"{cuda_home}/lib64" -lcudart_static -lnvrtc_static -lnvrtc-builtins_static -lnvptxcompiler_static -lpthread -ldl -lrt'
++                    f'-L"{cuda_home}/lib64" -L"{os.environ.get("CUDA_TOOLKIT_INCLUDE_DIR", "")}/lib" -lcudart_static -lnvrtc_static -lnvrtc-builtins_static -lnvptxcompiler_static -lpthread -ldl -lrt'
+                 )
+
+         if sys.platform == "darwin":
