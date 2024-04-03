@@ -28,8 +28,8 @@ requirements:
     - cmake
     - ninja
   host:
-    - cuda-cudart-dev  # [(cuda_compiler_version or "").startswith("12")]
-    - cuda-nvrtc-dev  # [(cuda_compiler_version or "").startswith("12")]
+    - cuda-nvrtc-dev     # [(cuda_compiler_version or "").startswith("12")]
+    - cuda-nvrtc-static  # [(cuda_compiler_version or "").startswith("12")]
     - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
     - python
     - pip
