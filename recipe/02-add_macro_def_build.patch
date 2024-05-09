@@ -1,6 +1,15 @@
 diff --git a/warp/build_dll.py b/warp/build_dll.py
 --- a/warp/build_dll.py
 +++ b/warp/build_dll.py
+@@ -82,7 +82,7 @@ def find_host_compiler():
+         vs_path = run_cmd(f'"{vswhere_path}" -latest -property installationPath').decode().rstrip()
+         vsvars_path = os.path.join(vs_path, "VC\\Auxiliary\\Build\\vcvars64.bat")
+
+-        output = run_cmd(f'"{vsvars_path}" && set').decode()
++        output = run_cmd(f'"set').decode()
+
+         for line in output.splitlines():
+             pair = line.split("=", 1)
 @@ -304,7 +304,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
              cpp_flags = f'{target} -O0 -g -fno-rtti -D_DEBUG -DWP_ENABLE_DEBUG=1 -D{cuda_enabled} -D{cutlass_enabled} -D{cuda_compat_enabled} -fPIC -fvisibility=hidden --std=c++14 -D_GLIBCXX_USE_CXX11_ABI=0 -fkeep-inline-functions -I"{native_dir}" {includes}'
 
