@@ -8,7 +8,7 @@ if not "%CUDA_COMPILER_VERSION%" == "None" (
     if "%CUDA_COMPILER_VERSION%" == "12.0" (
         set CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v%CUDA_COMPILER_VERSION%
         set CUDA_BIN_PATH=%CUDA_PATH%\bin
-        set CUDA_TOOLKIT_INCLUDE_DIR=%PREFIX%\Library
+        @REM set CUDA_TOOLKIT_INCLUDE_DIR=%PREFIX%\Library
     )
 )
 
