@@ -6,7 +6,7 @@ diff --git a/warp/build_dll.py b/warp/build_dll.py
          vsvars_path = os.path.join(vs_path, "VC\\Auxiliary\\Build\\vcvars64.bat")
 
 -        output = run_cmd(f'"{vsvars_path}" && set').decode()
-+        output = run_cmd(f'"set').decode()
++        output = run_cmd(f'set').decode()
 
          for line in output.splitlines():
              pair = line.split("=", 1)
