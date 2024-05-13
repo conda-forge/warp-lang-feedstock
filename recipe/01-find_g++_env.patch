@@ -22,7 +22,7 @@ diff --git a/warp/build_dll.py b/warp/build_dll.py
 
 
  def get_cuda_toolkit_version(cuda_home):
-@@ -319,7 +319,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
+@@ -323,6 +323,6 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
                  cpp_out = cpp_path + ".o"
                  ld_inputs.append(quote(cpp_out))
 
@@ -30,13 +30,12 @@ diff --git a/warp/build_dll.py b/warp/build_dll.py
 +                build_cmd = f'{args.host_compiler} {cpp_flags} -c "{cpp_path}" -o "{cpp_out}"'
                  run_cmd(build_cmd)
 
-         if cu_path:
-@@ -348,7 +348,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
+@@ -352,7 +352,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
 
          with ScopedTimer("link", active=args.verbose):
              origin = "@loader_path" if (sys.platform == "darwin") else "$ORIGIN"
--            link_cmd = f"g++ {target} -shared -Wl,-rpath,'{origin}' {opt_no_undefined} {opt_exclude_libs} -o '{dll_path}' {' '.join(ld_inputs + libs)}"
-+            link_cmd = f"{args.host_compiler} {target} -shared -Wl,-rpath,'{origin}' {opt_no_undefined} {opt_exclude_libs} -o '{dll_path}' {' '.join(ld_inputs + libs)}"
+-            link_cmd = f"g++ {version} -shared -Wl,-rpath,'{origin}' {opt_no_undefined} {opt_exclude_libs} -o '{dll_path}' {' '.join(ld_inputs + libs)}"
++            link_cmd = f"{args.host_compiler} {version} -shared -Wl,-rpath,'{origin}' {opt_no_undefined} {opt_exclude_libs} -o '{dll_path}' {' '.join(ld_inputs + libs)}"
              run_cmd(link_cmd)
 
              # Strip symbols to reduce the binary size

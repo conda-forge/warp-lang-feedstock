@@ -1,7 +1,7 @@
 diff --git a/build_llvm.py b/build_llvm.py
 --- a/build_llvm.py
 +++ b/build_llvm.py
-@@ -47,11 +47,6 @@ def fetch_prebuilt_libraries():
+@@ -46,11 +46,6 @@ def fetch_prebuilt_libraries(arch):
  def build_from_source_for_arch(args, arch, llvm_source):
      # Check out the LLVM project Git repository, unless it already exists
      if not os.path.exists(llvm_source):
