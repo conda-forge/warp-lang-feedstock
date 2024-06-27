@@ -1,0 +1,2 @@
+MACOSX_SDK_VERSION:   # [x86_64]
+  - "11.0"            # [x86_64]
