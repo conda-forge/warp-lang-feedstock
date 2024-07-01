@@ -1,5 +1,3 @@
-MACOSX_SDK_VERSION:
-- '11.0'
 c_compiler:
 - vs2019
 c_stdlib:
@@ -9,9 +7,9 @@ channel_sources:
 channel_targets:
 - conda-forge main
 cuda_compiler:
-- cuda-nvcc
+- nvcc
 cuda_compiler_version:
-- '12.0'
+- '11.8'
 cxx_compiler:
 - vs2019
 numpy:
