@@ -1,5 +1,5 @@
 {% set name = "warp-lang" %}
-{% set version = "1.2.2" %}
+{% set version = "1.3.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 0539bfa287fb7d777eac02dfef17ea2340ae5adfc2f5182b5cad9ee248af2069
+  sha256: 9f019601010a60bfb53cadd6a16eb40db5300a4bf3d290c4dd36fa830209db5d
   patches:
     - 01-find_g++_env.patch
     - 02-add_macro_def_build.patch
@@ -17,7 +17,7 @@ source:
 build:
   string: cpu{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
-  number: 1
+  number: 0
   skip: true  # [cuda_compiler_version == "11.2"]
 
 requirements:
