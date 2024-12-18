@@ -27,7 +27,7 @@ requirements:
     - {{ compiler('cuda') }}  # [cuda_compiler_version != "None"]
     - {{ stdlib("c") }}
     - cmake
-    - libxcrypt  # [linux]
+    - libxcrypt1  # [linux]
     - ninja
   host:
     - cuda-cudart-dev    # [(cuda_compiler_version or "").startswith("12") and win]
@@ -39,14 +39,14 @@ requirements:
     - pip
     - setuptools
     - gitpython
-    - libxcrypt  # [linux]
+    - libxcrypt1  # [linux]
     - numpy
   run:
     - __cuda   # [cuda_compiler_version != "None"]
     - python
     - numpy
     - jax  # [not win]
-    - libxcrypt  # [linux]
+    - libxcrypt1  # [linux]
     - scipy
     - treelib
     - typeguard
