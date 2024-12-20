@@ -5,11 +5,11 @@ index ec440ec1..d750366e 100644
 @@ -207,6 +207,9 @@ if platform.system() == "Windows":
              print("Warp build error: Could not find MSVC compiler")
              sys.exit(1)
- 
+
 +else:
 +    args.host_compiler = find_host_compiler()
 +
- 
+
  # return platform specific shared library name
  def lib_name(name):
 diff --git a/warp/build_dll.py b/warp/build_dll.py
@@ -17,29 +17,29 @@ index e4bc782f..1599721b 100644
 --- a/warp/build_dll.py
 +++ b/warp/build_dll.py
 @@ -109,7 +109,7 @@ def find_host_compiler():
- 
+
      else:
          # try and find g++
 -        return run_cmd("which g++").decode()
 +        return run_cmd("echo $CXX").decode().strip() if run_cmd("echo $CXX") != b"\xA0" else run_cmd("which g++").decode().strip()
- 
- 
+
+
  def get_cuda_toolkit_version(cuda_home):
 @@ -335,7 +335,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
                  cpp_out = cpp_path + ".o"
                  ld_inputs.append(quote(cpp_out))
- 
+
 -                build_cmd = f'g++ {cpp_flags} -c "{cpp_path}" -o "{cpp_out}"'
 +                build_cmd = f'{args.host_compiler} {cpp_flags} -c "{cpp_path}" -o "{cpp_out}"'
                  run_cmd(build_cmd)
- 
+
          if cu_path:
 @@ -367,7 +367,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
- 
+
          with ScopedTimer("link", active=args.verbose):
              origin = "@loader_path" if (sys.platform == "darwin") else "$ORIGIN"
 -            link_cmd = f"g++ {version} -shared -Wl,-rpath,'{origin}' {opt_no_undefined} {opt_exclude_libs} -o '{dll_path}' {' '.join(ld_inputs + libs)}"
-+            link_cmd = f"{args.host_compiler} {version} -shared -Wl,-rpath,'{origin}' {opt_no_undefined} {opt_exclude_libs} -o '{dll_path}' {' '.join(ld_inputs + libs)}"
++            link_cmd = f"{args.host_compiler} {version} -shared -Wl,-rpath,'{origin}' {os.environ.get('LD_EXTRA_FLAGS', "")} {opt_no_undefined} {opt_exclude_libs} -o '{dll_path}' {' '.join(ld_inputs + libs)}"
              run_cmd(link_cmd)
- 
+
              # Strip symbols to reduce the binary size
