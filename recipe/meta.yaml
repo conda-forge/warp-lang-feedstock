@@ -27,6 +27,7 @@ requirements:
     - {{ compiler('cuda') }}  # [cuda_compiler_version != "None"]
     - {{ stdlib("c") }}
     - cmake
+    - libxcrypt   # [linux]
     - libxcrypt1  # [linux]
     - ninja
   host:
@@ -39,6 +40,7 @@ requirements:
     - pip
     - setuptools
     - gitpython
+    - libxcrypt   # [linux]
     - libxcrypt1  # [linux]
     - numpy
   run:
@@ -46,6 +48,7 @@ requirements:
     - python
     - numpy
     - jax  # [not win]
+    - libxcrypt   # [linux]
     - libxcrypt1  # [linux]
     - scipy
     - treelib
