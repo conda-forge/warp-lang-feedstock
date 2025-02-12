@@ -12,5 +12,5 @@ if [[ "${cuda_compiler_version:-None}" != "None" ]]; then
     fi
 fi
 
-${PYTHON} build_lib.py ${ARGS:-}
+${PYTHON} build_lib.py ${ARGS:-} --mode=release
 ${PYTHON} -m pip install . -vv --no-deps --no-build-isolation --no-cache-dir

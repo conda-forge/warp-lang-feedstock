@@ -13,7 +13,7 @@ if not "%CUDA_COMPILER_VERSION%" == "None" (
 
 set
 
-%PYTHON% build_lib.py %ARGS%
+%PYTHON% build_lib.py %ARGS% --mode=release
 if errorlevel 1 exit 1
 
 %PYTHON% -m pip install . -vv --no-deps --no-build-isolation --no-cache-dir
