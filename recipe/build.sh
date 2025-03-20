@@ -11,7 +11,7 @@ if [[ "${cuda_compiler_version:-None}" != "None" ]]; then
       export CUDA_INSTALL_PATH=$(which nvcc | awk -F'/bin/nvcc' '{print $1}')
     fi
     if [[ "$target_platform" == linux-* ]]; then
-      export LD_EXTRA_FLAGS="$LD_EXTRA_FLAGS -Wl,-rpath, $CONDA_BUILD_SYSROOT/lib/libcrypt.so.1"
+      export LD_EXTRA_FLAGS="$LD_EXTRA_FLAGS -Wl,-rpath, $CONDA_BUILD_SYSROOT/lib/libcrypt.so.1 -L$CONDA_PREFIX/targets/x86_64-linux/lib"
     fi
 fi
 
