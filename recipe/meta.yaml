@@ -28,6 +28,7 @@ requirements:
     - {{ stdlib("c") }}
     - cmake
     - libnvjitlink-dev        # [(cuda_compiler_version or "").startswith("12")]
+    - libnvjitlink-static     # [(cuda_compiler_version or "").startswith("12")]
     - ninja
   host:
     - cuda-cudart-dev    # [(cuda_compiler_version or "").startswith("12") and win]
