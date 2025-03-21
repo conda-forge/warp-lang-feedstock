@@ -15,5 +15,8 @@ if [[ "${cuda_compiler_version:-None}" != "None" ]]; then
     fi
 fi
 
+# Force packman to use system python
+export PM_PYTHON_EXT=${PYTHON}
+
 ${PYTHON} build_lib.py ${ARGS:-}
 ${PYTHON} -m pip install . -vv --no-deps --no-build-isolation --no-cache-dir

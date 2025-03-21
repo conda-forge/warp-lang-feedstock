@@ -11,6 +11,9 @@ if not "%CUDA_COMPILER_VERSION%" == "None" (
     )
 )
 
+@REM Force packman to use system python
+set PM_PYTHON_EXT=%PYTHON%
+
 set
 
 %PYTHON% build_lib.py %ARGS%
