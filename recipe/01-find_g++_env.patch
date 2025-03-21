@@ -43,3 +43,11 @@ index e4bc782f..1599721b 100644
              run_cmd(link_cmd)
 
              # Strip symbols to reduce the binary size
+
+@@ -300,7 +300,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
+                     linkopts.append(f'nvJitLink_static.lib /LIBPATH:"{args.libmathdx_path}/lib" mathdx_static.lib')
+
+         with ScopedTimer("link", active=args.verbose):
+-            link_cmd = f'"{host_linker}" {" ".join(linkopts + libs)} /out:"{dll_path}"'
++            link_cmd = f'"{host_linker}" {os.environ.get('LINKER_EXTRA_FLAGS', '')} {" ".join(linkopts + libs)} /out:"{dll_path}"'
+             run_cmd(link_cmd)
