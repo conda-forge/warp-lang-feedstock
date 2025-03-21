@@ -9,6 +9,7 @@ if not "%CUDA_COMPILER_VERSION%" == "None" (
         set CUDA_PATH=%LIBRARY_PREFIX%
         set CUDA_BIN_PATH=%CUDA_PATH%\bin
     )
+    set LD_EXTRA_FLAGS=%LD_EXTRA_FLAGS% -L%CONDA_PREFIX%/Library
 )
 
 @REM Force packman to use system python
