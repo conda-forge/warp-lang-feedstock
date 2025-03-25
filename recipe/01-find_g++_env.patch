@@ -25,6 +25,15 @@ index e4bc782f..1599721b 100644
 
 
  def get_cuda_toolkit_version(cuda_home):
+@@ -293,7 +293,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
+                 run_cmd(cuda_cmd)
+                 linkopts.append(quote(cu_out))
+                 linkopts.append(
+-                    f'cudart_static.lib nvrtc_static.lib nvrtc-builtins_static.lib nvptxcompiler_static.lib ws2_32.lib user32.lib /LIBPATH:"{cuda_home}/lib/x64"'
++                    f"cudart_static.lib nvrtc_static.lib nvrtc-builtins_static.lib nvptxcompiler_static.lib ws2_32.lib user32.lib /LIBPATH:{os.environ.get('LINKER_EXTRA_FLAGS', '')}"
+                 )
+
+                 if args.libmathdx_path:
 @@ -335,7 +335,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
                  cpp_out = cpp_path + ".o"
                  ld_inputs.append(quote(cpp_out))
@@ -43,13 +52,3 @@ index e4bc782f..1599721b 100644
              run_cmd(link_cmd)
 
              # Strip symbols to reduce the binary size
-
-@@ -293,7 +293,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
-                 run_cmd(cuda_cmd)
-                 linkopts.append(quote(cu_out))
-                 linkopts.append(
--                    f'cudart_static.lib nvrtc_static.lib nvrtc-builtins_static.lib nvptxcompiler_static.lib ws2_32.lib user32.lib /LIBPATH:"{cuda_home}/lib/x64"'
-+                    f'cudart_static.lib nvrtc_static.lib nvrtc-builtins_static.lib nvptxcompiler_static.lib ws2_32.lib user32.lib /LIBPATH:{os.environ.get('LINKER_EXTRA_FLAGS', '')}'
-                 )
-
-                 if args.libmathdx_path:
