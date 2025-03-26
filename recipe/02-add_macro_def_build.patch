@@ -10,7 +10,7 @@ diff --git a/warp/build_dll.py b/warp/build_dll.py
 
          for line in output.splitlines():
              pair = line.split("=", 1)
-@@ -306,7 +306,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
+@@ -320,7 +320,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
              cpp_flags += "-O0 -g -D_DEBUG -DWP_ENABLE_DEBUG=1 -fkeep-inline-functions"
 
          if mode == "release":

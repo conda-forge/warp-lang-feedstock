@@ -1,5 +1,5 @@
 {% set name = "warp-lang" %}
-{% set version = "1.4.2" %}
+{% set version = "1.5.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v{{ version }}.tar.gz
-  sha256: 1bff115c88ca8a70837cfffbebccd5a6c1d203db2d211c8a4277e76f1eb4d569
+  sha256: 687a6af5bf375988a1c5b846491e19eb0b8d6aed8e06fa982739e879a8ccebf4
   patches:
     - 01-find_g++_env.patch
     - 02-add_macro_def_build.patch
@@ -18,7 +18,7 @@ build:
   string: cpu{{ CONDA_PY }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version == "None"]
   string: cuda{{ cuda_compiler_version | replace('.', '') }}_h{{ PKG_HASH }}_{{ PKG_BUILDNUM }}  # [cuda_compiler_version != "None"]
   number: 0
-  skip: true  # [cuda_compiler_version == "11.2"]
+  skip: true  # [cuda_compiler_version == "11.2" or (cuda_compiler_version == "11.8" and win)]
 
 requirements:
   build:
@@ -27,13 +27,17 @@ requirements:
     - {{ compiler('cuda') }}  # [cuda_compiler_version != "None"]
     - {{ stdlib("c") }}
     - cmake
+    - cuda-nvrtc-dev          # [(cuda_compiler_version or "").startswith("12")]
+    - cuda-nvrtc-static       # [(cuda_compiler_version or "").startswith("12")]
+    - libnvjitlink-dev        # [(cuda_compiler_version or "").startswith("12")]
+    - libnvjitlink-static     # [(cuda_compiler_version or "").startswith("12")]
     - ninja
   host:
     - cuda-cudart-dev    # [(cuda_compiler_version or "").startswith("12") and win]
     - cuda-nvcc          # [(cuda_compiler_version or "").startswith("12") and win]
-    - cuda-nvrtc-dev     # [(cuda_compiler_version or "").startswith("12")]
-    - cuda-nvrtc-static  # [(cuda_compiler_version or "").startswith("12")]
+    - libnvjitlink-dev   # [(cuda_compiler_version or "").startswith("12")]
     - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
+    - mathdx             # [(cuda_compiler_version or "").startswith("12") and linux]
     - python
     - pip
     - setuptools

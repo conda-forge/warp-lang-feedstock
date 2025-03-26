@@ -3,13 +3,17 @@
 set "ARGS="
 
 if not "%CUDA_COMPILER_VERSION%" == "None" (
-    set "NVCC_APPEND_FLAGS=%NVCC_APPEND_FLAGS% --use-local-env"
-    set ARGS=--cuda_path="%CUDA_HOME%"
-    if "%CUDA_COMPILER_VERSION%" == "12.0" (
+    set NVCC_APPEND_FLAGS=--use-local-env
+    if "%CUDA_COMPILER_VERSION:~0,3%" == "12." (
+        set ARGS="--cuda_path=%CUDA_HOME%"
         set CUDA_PATH=%LIBRARY_PREFIX%
         set CUDA_BIN_PATH=%CUDA_PATH%\bin
     )
+    set LINKER_EXTRA_FLAGS=%CONDA_PREFIX%/Library/lib
 )
+
+@REM Force packman to use system python
+set PM_PYTHON_EXT=%PYTHON%
 
 set
 
