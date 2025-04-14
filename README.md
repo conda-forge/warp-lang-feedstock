@@ -366,5 +366,6 @@ Feedstock Maintainers
 =====================
 
 * [@flferretti](https://github.com/flferretti/)
+* [@shi-eric](https://github.com/shi-eric/)
 * [@traversaro](https://github.com/traversaro/)
 
