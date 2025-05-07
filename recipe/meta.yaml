@@ -37,7 +37,7 @@ requirements:
     - cuda-nvcc          # [(cuda_compiler_version or "").startswith("12") and win]
     - libnvjitlink-dev   # [(cuda_compiler_version or "").startswith("12")]
     - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
-    - mathdx             # [(cuda_compiler_version or "").startswith("12") and linux]
+    - libmathdx-dev      # [(cuda_compiler_version or "").startswith("12") and linux]
     - python
     - pip
     - setuptools
