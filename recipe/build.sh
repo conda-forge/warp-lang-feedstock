@@ -9,7 +9,6 @@ if [[ "${cuda_compiler_version:-None}" != "None" ]]; then
       export CUDA_HOME="${BUILD_PREFIX}/targets/x86_64-linux"
       export CUDA_TOOLKIT_INCLUDE_DIR="${PREFIX}/targets/x86_64-linux"
       export CUDA_INSTALL_PATH=$(which nvcc | awk -F'/bin/nvcc' '{print $1}')
-      export LIBMATHDX_HOME="${BUILD_PREFIX}"
     fi
     if [[ "$target_platform" == linux-* ]]; then
       export LD_EXTRA_FLAGS="$LD_EXTRA_FLAGS -L$CONDA_PREFIX/targets/x86_64-linux/lib"
