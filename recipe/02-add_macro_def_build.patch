@@ -1,7 +1,7 @@
 diff --git a/warp/build_dll.py b/warp/build_dll.py
 --- a/warp/build_dll.py
 +++ b/warp/build_dll.py
-@@ -81,7 +81,7 @@ def find_host_compiler():
+@@ -89,7 +89,7 @@ def find_host_compiler():
          vs_path = run_cmd(f'"{vswhere_path}" -latest -property installationPath').decode().rstrip()
          vsvars_path = os.path.join(vs_path, "VC\\Auxiliary\\Build\\vcvars64.bat")
 
@@ -10,7 +10,7 @@ diff --git a/warp/build_dll.py b/warp/build_dll.py
 
          for line in output.splitlines():
              pair = line.split("=", 1)
-@@ -320,7 +320,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
+@@ -327,7 +327,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
              cpp_flags += "-O0 -g -D_DEBUG -DWP_ENABLE_DEBUG=1 -fkeep-inline-functions"
 
          if mode == "release":
