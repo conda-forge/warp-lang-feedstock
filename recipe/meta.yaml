@@ -1,6 +1,5 @@
 {% set name = "warp-lang" %}
 {% set version = "1.7.0" %}
-{% set mathdx_enabled = (cuda_compiler_version or "").startswith("12") and linux %}
 
 package:
   name: {{ name|lower }}
@@ -28,15 +27,16 @@ requirements:
     - {{ compiler('cuda') }}  # [cuda_compiler_version != "None"]
     - {{ stdlib("c") }}
     - cmake
-    - cuda-nvrtc-dev          # [(cuda_compiler_version or "").startswith("12")]
-    - cuda-nvrtc-static       # [(cuda_compiler_version or "").startswith("12")]
-    - libnvjitlink-dev        # [(cuda_compiler_version or "").startswith("12")]
-    - libnvjitlink-static     # [(cuda_compiler_version or "").startswith("12")]
+    - cuda-nvrtc-dev             # [(cuda_compiler_version or "").startswith("12")]
+    - cuda-nvrtc-static          # [(cuda_compiler_version or "").startswith("12")]
+    - libnvjitlink-dev           # [(cuda_compiler_version or "").startswith("12")]
+    - libnvjitlink-static        # [(cuda_compiler_version or "").startswith("12")]
+    - libmathdx-dev ==0.1.2      # [(cuda_compiler_version or "").startswith("12") and linux]
+    - libmathdx-static ==0.1.2   # [(cuda_compiler_version or "").startswith("12") and linux]
     - ninja
   host:
     - cuda-cudart-dev    # [(cuda_compiler_version or "").startswith("12") and win]
     - cuda-nvcc          # [(cuda_compiler_version or "").startswith("12") and win]
-    - libnvjitlink-dev   # [(cuda_compiler_version or "").startswith("12")]
     - cuda-version {{ cuda_compiler_version }}  # [cuda_compiler_version != "None"]
     - python
     - pip
@@ -45,9 +45,8 @@ requirements:
     - numpy
   run:
     - __cuda   # [cuda_compiler_version != "None"]
+    - jax      # [not win]
     - python
-    - numpy
-    - jax  # [not win]
     - scipy
     - treelib
     - typeguard
@@ -59,7 +58,7 @@ test:
     - pip check
     # Testing main functionalities to avoid OOM errors
     - python -m warp.tests -s autodetect -p 'test_c*.py' -p 'test_m*.py' -p 'test_s*.py'
-    - python -c "import warp; warp.init(); exit(not warp.context.runtime.core.is_mathdx_enabled())"  # [mathdx_enabled]
+    - python -c "import warp; warp.init(); exit(not warp.context.runtime.core.is_mathdx_enabled())"  # [(cuda_compiler_version or "").startswith("12") and linux]
   requires:
     - python
     - pip
