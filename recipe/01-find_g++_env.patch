@@ -2,7 +2,7 @@ diff --git a/build_lib.py b/build_lib.py
 index ec440ec1..d750366e 100644
 --- a/build_lib.py
 +++ b/build_lib.py
-@@ -201,6 +201,9 @@ if platform.system() == "Windows":
+@@ -204,6 +204,9 @@ if platform.system() == "Windows":
              print("Warp build error: Could not find MSVC compiler")
              sys.exit(1)
 
@@ -25,7 +25,7 @@ index e4bc782f..1599721b 100644
 
 
  def get_cuda_toolkit_version(cuda_home):
-@@ -300,7 +300,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
+@@ -389,7 +389,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
                  run_cmd(cuda_cmd)
                  linkopts.append(quote(cu_out))
                  linkopts.append(
@@ -34,21 +34,21 @@ index e4bc782f..1599721b 100644
                  )
 
                  if args.libmathdx_path:
-@@ -342,7 +342,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
-                 cpp_out = cpp_path + ".o"
-                 ld_inputs.append(quote(cpp_out))
+@@ -402,7 +402,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, arch, libs: Optional[
+     else:
+         # Unix compilation
+         cuda_compiler = "clang++" if getattr(args, "clang_build_toolchain", False) else "nvcc"
+-        cpp_compiler = "clang++" if getattr(args, "clang_build_toolchain", False) else "g++"
++        cpp_compiler = "clang++" if getattr(args, "clang_build_toolchain", False) else args.host_compiler
 
--                build_cmd = f'g++ {cpp_flags} -c "{cpp_path}" -o "{cpp_out}"'
-+                build_cmd = f'{args.host_compiler} {cpp_flags} -c "{cpp_path}" -o "{cpp_out}"'
-                 run_cmd(build_cmd)
-
-         if cu_path:
-@@ -374,7 +374,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
+         cpp_includes = f' -I"{warp_home_path.parent}/external/llvm-project/out/install/{mode}-{arch}/include"'
+         cpp_includes += f' -I"{warp_home_path.parent}/_build/host-deps/llvm-project/release-{arch}/include"'
+@@ -476,7 +476,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, arch, libs: Optional[
 
          with ScopedTimer("link", active=args.verbose):
              origin = "@loader_path" if (sys.platform == "darwin") else "$ORIGIN"
--            link_cmd = f"g++ {version} -shared -Wl,-rpath,'{origin}' {opt_no_undefined} {opt_exclude_libs} -o '{dll_path}' {' '.join(ld_inputs + libs)}"
-+            link_cmd = f"{args.host_compiler} {version} -shared -Wl,-rpath,'{origin}' {os.environ.get('LD_EXTRA_FLAGS', '')} {opt_no_undefined} {opt_exclude_libs} -o '{dll_path}' {' '.join(ld_inputs + libs)}"
+-            link_cmd = f"{cpp_compiler} {version} -shared -Wl,-rpath,'{origin}' {opt_no_undefined} {opt_exclude_libs} -o '{dll_path}' {' '.join(ld_inputs + libs)}"
++            link_cmd = f"{cpp_compiler} {version} -shared -Wl,-rpath,'{origin}' {os.environ.get('LD_EXTRA_FLAGS', '')} {opt_no_undefined} {opt_exclude_libs} -o '{dll_path}' {' '.join(ld_inputs + libs)}"
              run_cmd(link_cmd)
 
              # Strip symbols to reduce the binary size
