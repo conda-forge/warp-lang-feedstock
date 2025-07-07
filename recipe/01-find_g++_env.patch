@@ -1,17 +1,17 @@
 diff --git a/build_lib.py b/build_lib.py
-index ec440ec1..d750366e 100644
+index b88ed5ca..a0958148 100644
 --- a/build_lib.py
 +++ b/build_lib.py
-@@ -204,6 +204,9 @@ if platform.system() == "Windows":
+@@ -219,7 +219,8 @@ if platform.system() == "Windows":
+         if not args.host_compiler:
              print("Warp build error: Could not find MSVC compiler")
              sys.exit(1)
-
+-
 +else:
 +    args.host_compiler = find_host_compiler()
-+
 
- # return platform specific shared library name
- def lib_name(name):
+ def lib_name(name: str) -> str:
+     """Return platform-specific shared library name."""
 diff --git a/warp/build_dll.py b/warp/build_dll.py
 index e4bc782f..1599721b 100644
 --- a/warp/build_dll.py
