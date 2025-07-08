@@ -12,3 +12,5 @@ azure:
       CONDA_BLD_PATH: C:\\bld\\
       MINIFORGE_HOME: C:\\Miniforge
       SET_PAGEFILE: 'True'
+conda_install_tool: pixi
+conda_build_tool: rattler-build
