@@ -47,9 +47,6 @@ requirements:
     - __cuda   # [cuda_compiler_version != "None"]
     - jax      # [not win]
     - python
-    - scipy
-    - treelib
-    - typeguard
 
 test:
   imports:
