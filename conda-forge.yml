@@ -6,3 +6,9 @@ github:
 conda_build:
   error_overlinking: true
 conda_forge_output_validation: true
+azure:
+  settings_win:
+    variables:
+      CONDA_BLD_PATH: C:\\bld\\
+      MINIFORGE_HOME: C:\\Miniforge
+      SET_PAGEFILE: 'True'
