@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
-  version: "1.8.0"
+  version: "1.9.1"
 
 package:
   name: "warp-lang"
@@ -8,7 +8,7 @@ package:
 
 source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v${{ version }}.zip
-  sha256: de9529505cc5e105f546f556ae7550933903a1fd81fbf9ed4fb222d43b20d187
+  sha256: d7f2e867ec25ec4eb91e2ee66a62da2c63845986315e9ad03f2fe7a3638544d9
   patches:
     - 01-find_g++_env.patch
     - 02-add_macro_def_build.patch
@@ -59,11 +59,11 @@ tests:
       imports:
         - warp
   - script:
-    - pip check
+      - pip check
     # Testing main functionalities to avoid OOM errors
-    - python -m warp.tests -s autodetect -p 'test_c*.py' -p 'test_m*.py' -p 'test_s*.py'
-    - if: match(cuda_compiler_version, ">=12") and linux
-      then: python -c "import warp; warp.init(); exit(not warp.context.runtime.core.is_mathdx_enabled())"
+      - python -m warp.tests -s autodetect -p 'test_c*.py' -p 'test_m*.py' -p 'test_s*.py'
+      - if: match(cuda_compiler_version, ">=12") and linux
+        then: python -c "import warp; warp.init(); exit(not warp.context.runtime.core.is_mathdx_enabled())"
     requirements:
       run:
         - pip
