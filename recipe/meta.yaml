@@ -1,5 +1,5 @@
 {% set name = "warp-lang" %}
-{% set version = "1.7.1" %}
+{% set version = "1.8.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v{{ version }}.zip
-  sha256: 97a8140a8bc81ea583525eef6d74efc5ca60e9d6e1d5eca092b4f648c73c8179
+  sha256: de9529505cc5e105f546f556ae7550933903a1fd81fbf9ed4fb222d43b20d187
   patches:
     - 01-find_g++_env.patch
     - 02-add_macro_def_build.patch
@@ -31,8 +31,8 @@ requirements:
     - cuda-nvrtc-static          # [(cuda_compiler_version or "").startswith("12")]
     - libnvjitlink-dev           # [(cuda_compiler_version or "").startswith("12")]
     - libnvjitlink-static        # [(cuda_compiler_version or "").startswith("12")]
-    - libmathdx-dev ==0.1.2      # [(cuda_compiler_version or "").startswith("12") and linux]
-    - libmathdx-static ==0.1.2   # [(cuda_compiler_version or "").startswith("12") and linux]
+    - libmathdx-dev              # [(cuda_compiler_version or "").startswith("12") and linux]
+    - libmathdx-static           # [(cuda_compiler_version or "").startswith("12") and linux]
     - ninja
   host:
     - cuda-cudart-dev    # [(cuda_compiler_version or "").startswith("12") and win]
@@ -47,9 +47,6 @@ requirements:
     - __cuda   # [cuda_compiler_version != "None"]
     - jax      # [not win]
     - python
-    - scipy
-    - treelib
-    - typeguard
 
 test:
   imports:
