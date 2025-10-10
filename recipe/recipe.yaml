@@ -1,0 +1,93 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
+context:
+  version: "1.8.0"
+
+package:
+  name: "warp-lang"
+  version: ${{ version }}
+
+source:
+  url: https://github.com/NVIDIA/warp/archive/refs/tags/v${{ version }}.zip
+  sha256: de9529505cc5e105f546f556ae7550933903a1fd81fbf9ed4fb222d43b20d187
+  patches:
+    - 01-find_g++_env.patch
+    - 02-add_macro_def_build.patch
+    - 03-install_deps_llvm_conda.patch
+    - 04-find_nvcc_env.patch
+
+build:
+  number: 0
+  string: ${{ "cpu" if cuda_compiler_version == "None" else "cuda" + (cuda_compiler_version | replace('.', '')) }}_h${{ hash }}_${{ build }}
+  skip: cuda_compiler_version != "None" and win
+
+requirements:
+  build:
+    - ${{ compiler('c') }}
+    - ${{ compiler('cxx') }}
+    - if: cuda_compiler_version != "None"
+      then: ${{ compiler('cuda') }}
+    - ${{ stdlib("c") }}
+    - cmake
+    - if: match(cuda_compiler_version, ">=12")
+      then:
+        - cuda-nvrtc-dev
+        - cuda-nvrtc-static
+        - libnvjitlink-dev
+        - libnvjitlink-static
+        - if: linux
+          then:
+            - libmathdx-dev
+            - libmathdx-static
+    - ninja
+  host:
+    - if: cuda_compiler_version != "None"
+      then: cuda-version ${{ cuda_compiler_version }}.*
+    - python
+    - pip
+    - setuptools
+    - gitpython
+    - numpy
+  run:
+    - if: cuda_compiler_version != "None"
+      then: __cuda
+    - if: unix
+      then: jax
+    - python
+
+tests:
+  - python:
+      imports:
+        - warp
+  - script:
+    - pip check
+    # Testing main functionalities to avoid OOM errors
+    - python -m warp.tests -s autodetect -p 'test_c*.py' -p 'test_m*.py' -p 'test_s*.py'
+    - if: match(cuda_compiler_version, ">=12") and linux
+      then: python -c "import warp; warp.init(); exit(not warp.context.runtime.core.is_mathdx_enabled())"
+    requirements:
+      run:
+        - pip
+        - pytest
+        - python
+
+about:
+  homepage: https://github.com/NVIDIA/warp
+  summary: 'A Python framework for high-performance simulation and graphics programming.'
+  license: Apache-2.0 AND MIT AND CC0-1.0 AND LicenseRef-NvidiaProprietary
+  license_file:
+    - LICENSE.md
+    - licenses/appdirs-LICENSE.txt
+    - licenses/fp16-LICENSE.txt
+    - licenses/Gaia-LICENSE.txt
+    - licenses/llvm-LICENSE.txt
+    - licenses/moller-LICENSE.txt
+    - licenses/nanovdb-LICENSE.txt
+    - licenses/svd-LICENSE.txt
+    - licenses/unittest_parallel-LICENSE.txt
+    - licenses/usd-LICENSE.txt
+
+extra:
+  recipe-maintainers:
+    - flferretti
+    - traversaro
+    - shi-eric
