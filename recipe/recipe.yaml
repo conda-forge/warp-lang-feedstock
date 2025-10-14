@@ -28,7 +28,7 @@ requirements:
       then: ${{ compiler('cuda') }}
     - ${{ stdlib("c") }}
     - cmake
-    - if: match(cuda_compiler_version, ">=12")
+    - if: cuda_compiler_version != "None"
       then:
         - cuda-nvrtc-dev
         - cuda-nvrtc-static
@@ -62,7 +62,7 @@ tests:
     - pip check
     # Testing main functionalities to avoid OOM errors
     - python -m warp.tests -s autodetect -p 'test_c*.py' -p 'test_m*.py' -p 'test_s*.py'
-    - if: match(cuda_compiler_version, ">=12") and linux
+    - if: cuda_compiler_version != "None" and linux
       then: python -c "import warp; warp.init(); exit(not warp.context.runtime.core.is_mathdx_enabled())"
     requirements:
       run:
