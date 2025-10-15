@@ -3,14 +3,13 @@
 set -exo pipefail
 
 if [[ "${cuda_compiler_version:-None}" != "None" ]]; then
-    ARGS="--cuda_path=${CUDA_HOME}"
     export CUTLASS_PATH=$(pwd)
-    if [[ ${cuda_compiler_version} == 12* || ${cuda_compiler_version} == 13* ]]; then
-      export CUDA_HOME="${BUILD_PREFIX}/targets/x86_64-linux"
-      export CUDA_TOOLKIT_INCLUDE_DIR="${PREFIX}/targets/x86_64-linux"
-      export CUDA_INSTALL_PATH=$(which nvcc | awk -F'/bin/nvcc' '{print $1}')
-      export LIBMATHDX_HOME="${BUILD_PREFIX}"
-    fi
+    export CUDA_PATH="${PREFIX}/targets/${target_name}"
+    export CUDA_HOME="${BUILD_PREFIX}/targets/x86_64-linux"
+    export CUDA_TOOLKIT_INCLUDE_DIR="${BUILD_PREFIX}/targets/x86_64-linux"
+    export CUDA_INSTALL_PATH=$(which nvcc | awk -F'/bin/nvcc' '{print $1}')
+    export LIBMATHDX_HOME="${BUILD_PREFIX}"
+    ARGS="--cuda_path=${CUDA_HOME}"
     if [[ "$target_platform" == linux-* ]]; then
       export LD_EXTRA_FLAGS="$LD_EXTRA_FLAGS -L$CONDA_PREFIX/targets/x86_64-linux/lib"
     fi
