@@ -1,22 +1,22 @@
 diff --git a/build_lib.py b/build_lib.py
-index b88ed5ca..a0958148 100644
+index 91a1c1d9..2ee38be0 100644
 --- a/build_lib.py
 +++ b/build_lib.py
-@@ -219,7 +219,8 @@ if platform.system() == "Windows":
-         if not args.host_compiler:
-             print("Warp build error: Could not find MSVC compiler")
-             sys.exit(1)
--
-+else:
-+    args.host_compiler = find_host_compiler()
+@@ -278,6 +278,9 @@ def main(argv: list[str] | None = None) -> int:
+                 print("Warp build error: Could not find MSVC compiler")
+                 return 1
 
- def lib_name(name: str) -> str:
-     """Return platform-specific shared library name."""
++    else:
++        args.host_compiler = build_dll.find_host_compiler()
++
+     try:
+         # Generate warp/native/export.h
+         generate_exports_header_file(base_path)
 diff --git a/warp/build_dll.py b/warp/build_dll.py
-index e4bc782f..1599721b 100644
+index a2fa5d74..9638b5b9 100644
 --- a/warp/build_dll.py
 +++ b/warp/build_dll.py
-@@ -117,7 +117,7 @@ def find_host_compiler():
+@@ -120,7 +120,7 @@ def find_host_compiler():
 
      else:
          # try and find g++
@@ -24,17 +24,8 @@ index e4bc782f..1599721b 100644
 +        return run_cmd("echo $CXX").decode().strip() if run_cmd("echo $CXX") != b"\xA0" else run_cmd("which g++").decode().strip()
 
 
- def get_cuda_toolkit_version(cuda_home):
-@@ -389,7 +389,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, libs, arch, mode=None
-                 run_cmd(cuda_cmd)
-                 linkopts.append(quote(cu_out))
-                 linkopts.append(
--                    f'cudart_static.lib nvrtc_static.lib nvrtc-builtins_static.lib nvptxcompiler_static.lib ws2_32.lib user32.lib /LIBPATH:"{cuda_home}/lib/x64"'
-+                    f"cudart_static.lib nvrtc_static.lib nvrtc-builtins_static.lib nvptxcompiler_static.lib ws2_32.lib user32.lib /LIBPATH:{os.environ.get('LINKER_EXTRA_FLAGS', '')}"
-                 )
-
-                 if args.libmathdx_path:
-@@ -402,7 +402,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, arch, libs: Optional[
+ def get_cuda_toolkit_version(cuda_home) -> tuple[int, int]:
+@@ -387,7 +387,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, arch, libs: list[str]
      else:
          # Unix compilation
          cuda_compiler = "clang++" if getattr(args, "clang_build_toolchain", False) else "nvcc"
@@ -43,12 +34,13 @@ index e4bc782f..1599721b 100644
 
          cpp_includes = f' -I"{warp_home_path.parent}/external/llvm-project/out/install/{mode}-{arch}/include"'
          cpp_includes += f' -I"{warp_home_path.parent}/_build/host-deps/llvm-project/release-{arch}/include"'
-@@ -476,7 +476,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, arch, libs: Optional[
+@@ -461,7 +461,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, arch, libs: list[str]
 
          with ScopedTimer("link", active=args.verbose):
              origin = "@loader_path" if (sys.platform == "darwin") else "$ORIGIN"
 -            link_cmd = f"{cpp_compiler} {version} -shared -Wl,-rpath,'{origin}' {opt_no_undefined} {opt_exclude_libs} -o '{dll_path}' {' '.join(ld_inputs + libs)}"
-+            link_cmd = f"{cpp_compiler} {version} -shared -Wl,-rpath,'{origin}' {os.environ.get('LD_EXTRA_FLAGS', '')} {opt_no_undefined} {opt_exclude_libs} -o '{dll_path}' {' '.join(ld_inputs + libs)}"
++            link_cmd = f"{cpp_compiler} {version} -shared -Wl,-rpath,'{origin}' {os.environ.get('LD_EXTRA_FLAGS', '')} {opt_no_undefined} {opt_exclude_libs} -o '{dll_path}
+' {' '.join(ld_inputs + libs)}"
              run_cmd(link_cmd)
 
              # Strip symbols to reduce the binary size
