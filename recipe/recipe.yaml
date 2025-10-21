@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
-  version: "1.8.0"
+  version: "1.8.1"
 
 package:
   name: "warp-lang"
@@ -8,7 +8,7 @@ package:
 
 source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v${{ version }}.zip
-  sha256: de9529505cc5e105f546f556ae7550933903a1fd81fbf9ed4fb222d43b20d187
+  sha256: 5a1cff0a52ac32e56160043294a314a4a203f76e3116a48ff548266937f44916
   patches:
     - 01-find_g++_env.patch
     - 02-add_macro_def_build.patch
