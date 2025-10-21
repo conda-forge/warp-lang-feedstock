@@ -11,7 +11,7 @@ source:
   sha256: 5a3728afb31da83d9d3f4bbe23c8a671075a241bce8d88467226b966fba6ba2a
   patches:
     - 01-find_g++_env.patch
-    - 02-add_macro_def_build.patch
+    - 02-disable_vsvars64.patch
     - 03-install_deps_llvm_conda.patch
     - 04-find_nvcc_env.patch
 
