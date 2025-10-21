@@ -30,10 +30,12 @@ requirements:
     - cmake
     - if: cuda_compiler_version != "None"
       then:
+        - cuda-cudart-dev
         - cuda-nvrtc-dev
         - cuda-nvrtc-static
         - libnvjitlink-dev
         - libnvjitlink-static
+        - libnvptxcompiler-dev
         - if: linux
           then:
             - libmathdx-dev
