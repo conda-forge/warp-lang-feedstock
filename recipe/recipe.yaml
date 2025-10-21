@@ -63,7 +63,7 @@ tests:
   - script:
     - pip check
     # Testing main functionalities to avoid OOM errors
-    - python -m warp.tests -s autodetect -p 'test_c*.py' -p 'test_m*.py' -p 'test_s*.py'
+    - python -m warp.tests -s autodetect -p "test_c*.py" -p "test_m*.py" -p "test_s*.py"
     - if: cuda_compiler_version != "None" and linux
       then: python -c "import warp; warp.init(); exit(not warp.context.runtime.core.wp_is_mathdx_enabled())"
     requirements:
