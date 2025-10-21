@@ -34,13 +34,3 @@ index a2fa5d74..9638b5b9 100644
 
          cpp_includes = f' -I"{warp_home_path.parent}/external/llvm-project/out/install/{mode}-{arch}/include"'
          cpp_includes += f' -I"{warp_home_path.parent}/_build/host-deps/llvm-project/release-{arch}/include"'
-@@ -461,7 +461,7 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_path, arch, libs: list[str]
-
-         with ScopedTimer("link", active=args.verbose):
-             origin = "@loader_path" if (sys.platform == "darwin") else "$ORIGIN"
--            link_cmd = f"{cpp_compiler} {version} -shared -Wl,-rpath,'{origin}' {opt_no_undefined} {opt_exclude_libs} -o '{dll_path}' {' '.join(ld_inputs + libs)}"
-+            link_cmd = f"{cpp_compiler} {version} -shared -Wl,-rpath,'{origin}' {os.environ.get('LD_EXTRA_FLAGS', '')} {opt_no_undefined} {opt_exclude_libs} -o '{dll_path}
-' {' '.join(ld_inputs + libs)}"
-             run_cmd(link_cmd)
-
-             # Strip symbols to reduce the binary size
