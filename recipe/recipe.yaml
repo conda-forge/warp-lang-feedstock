@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
-  version: "1.8.1"
+  version: "1.9.0"
 
 package:
   name: "warp-lang"
@@ -8,10 +8,10 @@ package:
 
 source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v${{ version }}.zip
-  sha256: 5a1cff0a52ac32e56160043294a314a4a203f76e3116a48ff548266937f44916
+  sha256: 5a3728afb31da83d9d3f4bbe23c8a671075a241bce8d88467226b966fba6ba2a
   patches:
     - 01-find_g++_env.patch
-    - 02-add_macro_def_build.patch
+    - 02-disable_vsvars64.patch
     - 03-install_deps_llvm_conda.patch
     - 04-find_nvcc_env.patch
 
@@ -28,12 +28,14 @@ requirements:
       then: ${{ compiler('cuda') }}
     - ${{ stdlib("c") }}
     - cmake
-    - if: match(cuda_compiler_version, ">=12")
+    - if: cuda_compiler_version != "None"
       then:
+        - cuda-cudart-dev
         - cuda-nvrtc-dev
         - cuda-nvrtc-static
         - libnvjitlink-dev
         - libnvjitlink-static
+        - libnvptxcompiler-dev
         - if: linux
           then:
             - libmathdx-dev
@@ -61,9 +63,9 @@ tests:
   - script:
     - pip check
     # Testing main functionalities to avoid OOM errors
-    - python -m warp.tests -s autodetect -p 'test_c*.py' -p 'test_m*.py' -p 'test_s*.py'
-    - if: match(cuda_compiler_version, ">=12") and linux
-      then: python -c "import warp; warp.init(); exit(not warp.context.runtime.core.is_mathdx_enabled())"
+    - python -m warp.tests -s autodetect -p "test_c*.py" -p "test_m*.py" -p "test_s*.py"
+    - if: cuda_compiler_version != "None" and linux
+      then: python -c "import warp; warp.init(); exit(not warp.context.runtime.core.wp_is_mathdx_enabled())"
     requirements:
       run:
         - pip
