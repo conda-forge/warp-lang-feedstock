@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
-  version: "1.9.0"
+  version: "1.9.1"
 
 package:
   name: "warp-lang"
@@ -8,7 +8,7 @@ package:
 
 source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v${{ version }}.zip
-  sha256: 5a3728afb31da83d9d3f4bbe23c8a671075a241bce8d88467226b966fba6ba2a
+  sha256: d7f2e867ec25ec4eb91e2ee66a62da2c63845986315e9ad03f2fe7a3638544d9
   patches:
     - 01-find_g++_env.patch
     - 02-disable_vsvars64.patch
@@ -18,7 +18,6 @@ source:
 build:
   number: 0
   string: ${{ "cpu" if cuda_compiler_version == "None" else "cuda" + (cuda_compiler_version | replace('.', '')) }}_h${{ hash }}_${{ build }}
-  skip: cuda_compiler_version != "None" and win
 
 requirements:
   build:
@@ -36,10 +35,10 @@ requirements:
         - libnvjitlink-dev
         - libnvjitlink-static
         - libnvptxcompiler-dev
-        - if: linux
-          then:
-            - libmathdx-dev
-            - libmathdx-static
+        - libmathdx-dev
+        - libmathdx-static
+        - if: win
+          then: cuda-cudart-static
     - ninja
   host:
     - if: cuda_compiler_version != "None"
