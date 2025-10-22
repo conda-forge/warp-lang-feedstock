@@ -39,6 +39,8 @@ requirements:
           then:
             - libmathdx-dev
             - libmathdx-static
+        - if: win
+          then: cuda-cudart-static
     - ninja
   host:
     - if: cuda_compiler_version != "None"
