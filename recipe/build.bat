@@ -7,6 +7,7 @@ if not "%CUDA_COMPILER_VERSION%" == "None" (
     if "%CUDA_COMPILER_VERSION:~0,3%" == "13." set "CUDA_VERSION_CHECK=1"
     if "%CUDA_VERSION_CHECK%" == "1" (
         set CUDA_HOME=%CONDA_PREFIX%/Library/
+        set LIBMATHDX_HOME=%BUILD_PREFIX%
     )
     set LINKER_EXTRA_FLAGS=%CONDA_PREFIX%/Library/lib
 )

@@ -35,10 +35,8 @@ requirements:
         - libnvjitlink-dev
         - libnvjitlink-static
         - libnvptxcompiler-dev
-        - if: linux
-          then:
-            - libmathdx-dev
-            - libmathdx-static
+        - libmathdx-dev
+        - libmathdx-static
         - if: win
           then: cuda-cudart-static
     - ninja
