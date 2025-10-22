@@ -9,7 +9,7 @@ if not "%CUDA_COMPILER_VERSION%" == "None" (
         set CUDA_HOME=%CONDA_PREFIX%/Library/
         set LIBMATHDX_HOME=%BUILD_PREFIX%
     )
-    set LINKER_EXTRA_FLAGS=%CONDA_PREFIX%/Library/lib
+    set "LIB=%CONDA_PREFIX%\Library\lib;%LIB%"
 )
 
 @REM Force packman to use system python
