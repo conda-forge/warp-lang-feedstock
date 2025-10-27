@@ -14,9 +14,10 @@ source:
     - 02-disable_vsvars64.patch
     - 03-install_deps_llvm_conda.patch
     - 04-find_nvcc_env.patch
+    - 05-python_3.14.patch
 
 build:
-  number: 0
+  number: 1
   string: ${{ "cpu" if cuda_compiler_version == "None" else "cuda" + (cuda_compiler_version | replace('.', '')) }}_h${{ hash }}_${{ build }}
 
 requirements:
@@ -60,11 +61,11 @@ tests:
       imports:
         - warp
   - script:
-    - pip check
+      - pip check
     # Testing main functionalities to avoid OOM errors
-    - python -m warp.tests -s autodetect -p "test_c*.py" -p "test_m*.py" -p "test_s*.py"
-    - if: cuda_compiler_version != "None" and linux
-      then: python -c "import warp; warp.init(); exit(not warp.context.runtime.core.wp_is_mathdx_enabled())"
+      - python -m warp.tests -s autodetect -p "test_c*.py" -p "test_m*.py" -p "test_s*.py"
+      - if: cuda_compiler_version != "None" and linux
+        then: python -c "import warp; warp.init(); exit(not warp.context.runtime.core.wp_is_mathdx_enabled())"
     requirements:
       run:
         - pip
