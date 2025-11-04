@@ -14,7 +14,6 @@ source:
     - 02-disable_vsvars64.patch
     - 03-install_deps_llvm_conda.patch
     - 04-find_nvcc_env.patch
-    - 05-python_3.14.patch
 
 build:
   number: 1
