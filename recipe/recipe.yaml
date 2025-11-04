@@ -16,7 +16,7 @@ source:
     - 04-find_nvcc_env.patch
 
 build:
-  number: 1
+  number: 0
   string: ${{ "cpu" if cuda_compiler_version == "None" else "cuda" + (cuda_compiler_version | replace('.', '')) }}_h${{ hash }}_${{ build }}
 
 requirements:
