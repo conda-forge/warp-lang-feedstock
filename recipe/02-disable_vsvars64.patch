@@ -1,7 +1,8 @@
-diff --git a/warp/build_dll.py b/warp/build_dll.py
---- a/warp/build_dll.py
-+++ b/warp/build_dll.py
-@@ -89,7 +89,7 @@ def find_host_compiler():
+diff --git a/warp/_src/build_dll.py b/warp/_src/build_dll.py
+index 335f2872..dba1e1a6 100644
+--- a/warp/_src/build_dll.py
++++ b/warp/_src/build_dll.py
+@@ -98,7 +98,7 @@ def find_host_compiler():
          vs_path = run_cmd(f'"{vswhere_path}" -latest -property installationPath').decode().rstrip()
          vsvars_path = os.path.join(vs_path, "VC\\Auxiliary\\Build\\vcvars64.bat")
 
