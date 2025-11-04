@@ -17,7 +17,7 @@ set PM_PYTHON_EXT=%PYTHON%
 
 set
 
-%PYTHON% build_lib.py %ARGS%
+%PYTHON% build_lib.py %ARGS% --quick -j%CPU_COUNT%
 
 %PYTHON% -m pip install . -vv --no-deps --no-build-isolation --no-cache-dir
 if errorlevel 1 exit 1

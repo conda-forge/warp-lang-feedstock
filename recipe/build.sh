@@ -11,5 +11,5 @@ fi
 # Force packman to use system python
 export PM_PYTHON_EXT=${PYTHON}
 
-${PYTHON} build_lib.py ${ARGS:-}
+${PYTHON} build_lib.py ${ARGS:-} --quick -j${CPU_COUNT}
 ${PYTHON} -m pip install . -vv --no-deps --no-build-isolation --no-cache-dir
