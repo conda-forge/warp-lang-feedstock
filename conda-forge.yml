@@ -14,3 +14,6 @@ azure:
       SET_PAGEFILE: 'True'
 conda_install_tool: pixi
 conda_build_tool: rattler-build
+build_platform:
+  osx_arm64: osx_64
+test: native_and_emulated
