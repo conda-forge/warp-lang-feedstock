@@ -2,6 +2,15 @@ diff --git a/build_llvm.py b/build_llvm.py
 index 1aa8631a..3f1d11f8 100644
 --- a/build_llvm.py
 +++ b/build_llvm.py
+@@ -46,6 +46,8 @@ def fetch_prebuilt_libraries(arch):
+                 "aarch64": "15.0.7-linux-aarch64-gcc7.5",
+                 "x86_64": "18.1.3-linux-x86_64-gcc9.4",
+             }
++    env = os.environ.copy()
++    env["PM_PYTHON_EXT"] = sys.executable
+
+     try:
+         subprocess.check_output(
 @@ -76,10 +76,6 @@ def build_llvm_clang_from_source_for_arch(args, arch: str, llvm_source: str) ->
 
      # Check out the LLVM project Git repository, unless it already exists
