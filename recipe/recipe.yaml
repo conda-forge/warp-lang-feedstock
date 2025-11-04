@@ -25,6 +25,10 @@ requirements:
     - ${{ compiler('cxx') }}
     - if: cuda_compiler_version != "None"
       then: ${{ compiler('cuda') }}
+    - if: build_platform != target_platform
+      then:
+        - cross-python_${{ target_platform }}
+        - numpy
     - ${{ stdlib("c") }}
     - cmake
     - if: cuda_compiler_version != "None"
