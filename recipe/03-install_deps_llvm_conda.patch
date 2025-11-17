@@ -7,7 +7,7 @@ index 1aa8631a..3f1d11f8 100644
                  "x86_64": "18.1.3-linux-x86_64-gcc9.4",
              }
 +    env = os.environ.copy()
-+    env["PM_PYTHON_EXT"] = sys.executable
++    env["PM_PYTHON_EXT"] = os.environ["PM_PYTHON_EXT"]
 
      try:
          subprocess.check_output(

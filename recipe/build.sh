@@ -8,8 +8,8 @@ if [[ "${cuda_compiler_version:-None}" != "None" ]]; then
     export LIBRARY_PATH="${BUILD_PREFIX}/targets/x86_64-linux/lib:${LIBRARY_PATH}"
 fi
 
-# Force packman to use system python
-export PM_PYTHON_EXT=${PYTHON}
+env PM_PYTHON_EXT="${PYTHON}" \
+    PM_PACKAGES_ROOT="${SRC_DIR}/_packman_cache" \
+    ${PYTHON} build_lib.py ${ARGS:-} --quick -j${CPU_COUNT}
 
-${PYTHON} build_lib.py ${ARGS:-} --quick -j${CPU_COUNT}
 ${PYTHON} -m pip install . -vv --no-deps --no-build-isolation --no-cache-dir
