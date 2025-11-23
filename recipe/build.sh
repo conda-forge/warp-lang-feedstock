@@ -14,6 +14,6 @@ if [[ "${target_platform}" == linux-* ]]; then
     export PM_PYTHON_EXT="${PYTHON}"
 fi
 
-${PYTHON} build_lib.py ${ARGS:-} --quick -j${CPU_COUNT}
+${PYTHON} build_lib.py ${ARGS:-} --quick
 
 ${PYTHON} -m pip install . -vv --no-deps --no-build-isolation --no-cache-dir
