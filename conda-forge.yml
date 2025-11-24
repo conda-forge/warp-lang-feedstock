@@ -7,6 +7,7 @@ conda_build:
   error_overlinking: true
 conda_forge_output_validation: true
 azure:
+  free_disk_space: True
   settings_win:
     variables:
       CONDA_BLD_PATH: C:\\bld\\
@@ -14,3 +15,6 @@ azure:
       SET_PAGEFILE: 'True'
 conda_install_tool: pixi
 conda_build_tool: rattler-build
+build_platform:
+  osx_arm64: osx_64
+test: native

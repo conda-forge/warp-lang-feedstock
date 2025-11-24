@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
-  version: "1.9.1"
+  version: "1.10.0"
 
 package:
   name: "warp-lang"
@@ -8,17 +8,17 @@ package:
 
 source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v${{ version }}.zip
-  sha256: d7f2e867ec25ec4eb91e2ee66a62da2c63845986315e9ad03f2fe7a3638544d9
+  sha256: 2dade516efbd459565268e58c5424159ad263a5d364f5ab3f879f333865234de
   patches:
     - 01-find_g++_env.patch
     - 02-disable_vsvars64.patch
     - 03-install_deps_llvm_conda.patch
     - 04-find_nvcc_env.patch
-    - 05-python_3.14.patch
 
 build:
-  number: 1
+  number: 0
   string: ${{ "cpu" if cuda_compiler_version == "None" else "cuda" + (cuda_compiler_version | replace('.', '')) }}_h${{ hash }}_${{ build }}
+  skip: (osx and x86_64)
 
 requirements:
   build:
@@ -26,6 +26,11 @@ requirements:
     - ${{ compiler('cxx') }}
     - if: cuda_compiler_version != "None"
       then: ${{ compiler('cuda') }}
+    - if: build_platform != target_platform
+      then:
+        - cross-python_${{ target_platform }}
+        - python
+        - numpy
     - ${{ stdlib("c") }}
     - cmake
     - if: cuda_compiler_version != "None"
