@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
-  version: "1.10.0"
+  version: "1.10.1"
 
 package:
   name: "warp-lang"
@@ -8,12 +8,7 @@ package:
 
 source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v${{ version }}.zip
-  sha256: 2dade516efbd459565268e58c5424159ad263a5d364f5ab3f879f333865234de
-  patches:
-    - 01-find_g++_env.patch
-    - 02-disable_vsvars64.patch
-    - 03-install_deps_llvm_conda.patch
-    - 04-find_nvcc_env.patch
+  sha256: 2d05ae04fb6559dc54a07c5e193031f18f3542aacd2feba9b4325ef1b8b1e516
 
 build:
   number: 0
