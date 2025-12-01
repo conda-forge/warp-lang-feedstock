@@ -404,6 +404,3 @@ Feedstock Maintainers
 * [@shi-eric](https://github.com/shi-eric/)
 * [@traversaro](https://github.com/traversaro/)
 
-
-<!-- dummy commit to enable rerendering -->
-
