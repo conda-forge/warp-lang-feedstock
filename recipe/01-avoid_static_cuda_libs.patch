@@ -1,0 +1,117 @@
+diff --git a/build_lib.py b/build_lib.py
+index 7a3727c2..4bcfdee7 100644
+--- a/build_lib.py
++++ b/build_lib.py
+@@ -298,6 +298,13 @@ def main(argv: list[str] | None = None) -> int:
+     parser.add_argument("--no_fast_math", dest="fast_math", action="store_false")
+     parser.set_defaults(fast_math=False)
+
++    parser.add_argument(
++        "--use_dynamic_cuda",
++        action="store_true",
++        help="Link against dynamic CUDA libraries instead of static ones (useful for smaller binaries), default disabled",
++    )
++    parser.set_defaults(use_dynamic_cuda=False)
++
+     parser.add_argument("--quick", action="store_true", help="Only generate PTX code")
+     parser.set_defaults(quick=False)
+
+diff --git a/warp/_src/build_dll.py b/warp/_src/build_dll.py
+index 92607bc7..646587e8 100644
+--- a/warp/_src/build_dll.py
++++ b/warp/_src/build_dll.py
+@@ -579,6 +579,10 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_paths, arch, libs: list[str
+
+             cuda_cmds = []
+             if cu_paths:
++                # Set CUDA_PATH environment variable for nvcc auto-detection (conda-forge, custom installations)
++                if cuda_home:
++                    os.environ["CUDA_PATH"] = cuda_home
++
+                 for cu_path in cu_paths:
+                     cu_out = cu_path + ".o"
+
+@@ -595,12 +599,26 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_paths, arch, libs: list[str
+
+                     linkopts.append(quote(cu_out))
+
+-                linkopts.append(
+-                    f'cudart_static.lib nvrtc_static.lib nvrtc-builtins_static.lib nvptxcompiler_static.lib ws2_32.lib user32.lib /LIBPATH:"{cuda_home}/lib/x64"'
+-                )
++                # Link against CUDA libraries (static or dynamic)
++                # Windows defaults to static linking for backward compatibility
++                # When use_dynamic_cuda=False (default): Static linking for self-contained builds
++                # When use_dynamic_cuda=True: Dynamic linking, requires CUDA runtime DLLs at execution
++                if not getattr(args, "use_dynamic_cuda", False):
++                    # Static linking (default)
++                    linkopts.append(
++                        f'cudart_static.lib nvrtc_static.lib nvrtc-builtins_static.lib nvptxcompiler_static.lib ws2_32.lib user32.lib /LIBPATH:"{cuda_home}/lib/x64"'
++                    )
++                else:
++                    # Dynamic linking
++                    linkopts.append(
++                        f'cudart.lib nvrtc.lib ws2_32.lib user32.lib /LIBPATH:"{cuda_home}/lib/x64"'
++                    )
+
+                 if args.libmathdx_path:
+-                    linkopts.append(f'nvJitLink_static.lib /LIBPATH:"{args.libmathdx_path}/lib/x64" mathdx_static.lib')
++                    if not getattr(args, "use_dynamic_cuda", False):
++                        linkopts.append(f'nvJitLink_static.lib /LIBPATH:"{args.libmathdx_path}/lib/x64" mathdx_static.lib')
++                    else:
++                        linkopts.append(f'nvJitLink.lib /LIBPATH:"{args.libmathdx_path}/lib/x64" mathdx.lib')
+
+             if args.jobs <= 1:
+                 with ScopedTimer("build_cuda", active=args.verbose):
+@@ -686,11 +704,15 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_paths, arch, libs: list[str
+                         opt.replace("@filename@", os.path.basename(cu_path).replace(".", "_")) for opt in nvcc_opts
+                     ]
+
++                    # Add CUDA include paths for conda-forge and non-standard installations
++                    # nvcc needs explicit include paths to find cuda_runtime.h and other headers
++                    nvcc_includes = f'-I"{cuda_home}/include"' if cuda_home else ""
++
+                     if cuda_compiler == "nvcc":
+                         if mode == "debug":
+-                            cuda_cmd = f'{nvcc_cmd} --std=c++17 -g -G -O0 --compiler-options -fPIC,-fvisibility=hidden -D_DEBUG -D_ITERATOR_DEBUG_LEVEL=0 -line-info {" ".join(_nvcc_opts)} -DWP_ENABLE_CUDA=1 -I"{native_dir}" -D{mathdx_enabled} {libmathdx_includes} -o "{cu_out}" -c "{cu_path}"'
++                            cuda_cmd = f'{nvcc_cmd} --std=c++17 -g -G -O0 --compiler-options -fPIC,-fvisibility=hidden -D_DEBUG -D_ITERATOR_DEBUG_LEVEL=0 -line-info {" ".join(_nvcc_opts)} -DWP_ENABLE_CUDA=1 -I"{native_dir}" {nvcc_includes} -D{mathdx_enabled} {libmathdx_includes} -o "{cu_out}" -c "{cu_path}"'
+                         elif mode == "release":
+-                            cuda_cmd = f'{nvcc_cmd} --std=c++17 -O3 --compiler-options -fPIC,-fvisibility=hidden {" ".join(_nvcc_opts)} -DNDEBUG -DWP_ENABLE_CUDA=1 -I"{native_dir}" -D{mathdx_enabled} {libmathdx_includes} -o "{cu_out}" -c "{cu_path}"'
++                            cuda_cmd = f'{nvcc_cmd} --std=c++17 -O3 --compiler-options -fPIC,-fvisibility=hidden {" ".join(_nvcc_opts)} -DNDEBUG -DWP_ENABLE_CUDA=1 -I"{native_dir}" {nvcc_includes} -D{mathdx_enabled} {libmathdx_includes} -o "{cu_out}" -c "{cu_path}"'
+                     else:
+                         # Use Clang compiler
+                         if mode == "debug":
+@@ -702,12 +724,33 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_paths, arch, libs: list[str
+
+                     ld_inputs.append(quote(cu_out))
+
+-                ld_inputs.append(
+-                    f'-L"{cuda_home}/lib64" -lcudart_static -lnvrtc_static -lnvrtc-builtins_static -lnvptxcompiler_static -lpthread -ldl -lrt'
+-                )
++                # Link against CUDA libraries (static or dynamic)
++                # When use_dynamic_cuda=False (default): Link against static CUDA libraries for self-contained builds.
++                # When use_dynamic_cuda=True: Link against dynamic CUDA libraries.
++                #   Requires CUDA libraries to be available at runtime.
++                if not getattr(args, "use_dynamic_cuda", False):
++                    # Static linking (default)
++                    ld_inputs.append(
++                        f'-L"{cuda_home}/lib64" '
++                        '-lcudart_static -lnvrtc_static -lnvrtc-builtins_static -lnvptxcompiler_static '
++                        '-lpthread -ldl -lrt'
++                    )
++                else:
++                    # Dynamic linking. Note: nvptxcompiler_static is always used because
++                    # the dynamic version is not available in conda-forge
++                    ld_inputs.append(
++                        f'-L"{cuda_home}/lib64" -L"{cuda_home}/lib" '
++                        '-lcudart -lnvrtc -lnvptxcompiler_static -lpthread -ldl -lrt'
++                    )
+
+                 if args.libmathdx_path:
+-                    ld_inputs.append(f"-lnvJitLink_static -L{args.libmathdx_path}/lib -lmathdx_static")
++                    if not getattr(args, "use_dynamic_cuda", False):
++                        ld_inputs.append(f"-lnvJitLink_static -L{args.libmathdx_path}/lib -lmathdx_static")
++                    else:
++                        ld_inputs.append(f"-lnvJitLink -L{args.libmathdx_path}/lib -lmathdx")
+
+             if args.jobs <= 1:
+                 with ScopedTimer("build_cuda", active=args.verbose):

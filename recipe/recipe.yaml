@@ -9,6 +9,8 @@ package:
 source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v${{ version }}.zip
   sha256: 2d05ae04fb6559dc54a07c5e193031f18f3542aacd2feba9b4325ef1b8b1e516
+  patches:
+    - 01-avoid_static_cuda_libs.patch
 
 build:
   number: 0
@@ -43,7 +45,8 @@ requirements:
     - ninja
   host:
     - if: cuda_compiler_version != "None"
-      then: cuda-version ${{ cuda_compiler_version }}.*
+      then:
+        - cuda-version ${{ cuda_compiler_version }}.*
     - python
     - pip
     - setuptools
@@ -51,7 +54,12 @@ requirements:
     - numpy
   run:
     - if: cuda_compiler_version != "None"
-      then: __cuda
+      then:
+        - __cuda
+        - cuda-cudart
+        - cuda-nvrtc
+        - libnvjitlink
+        - libmathdx
     - if: unix
       then: jax
     - python
