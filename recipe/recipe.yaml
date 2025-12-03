@@ -30,6 +30,7 @@ requirements:
         - numpy
     - ${{ stdlib("c") }}
     - cmake
+    - llvmdev
     - if: cuda_compiler_version != "None"
       then:
         - cuda-cudart-dev
@@ -89,7 +90,6 @@ about:
     - licenses/appdirs-LICENSE.txt
     - licenses/fp16-LICENSE.txt
     - licenses/Gaia-LICENSE.txt
-    - licenses/llvm-LICENSE.txt
     - licenses/moller-LICENSE.txt
     - licenses/nanovdb-LICENSE.txt
     - licenses/svd-LICENSE.txt
