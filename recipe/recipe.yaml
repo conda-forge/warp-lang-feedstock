@@ -21,18 +21,10 @@ requirements:
   build:
     - ${{ compiler('c') }}
     - ${{ compiler('cxx') }}
-    - if: cuda_compiler_version != "None"
-      then: ${{ compiler('cuda') }}
-    - if: build_platform != target_platform
-      then:
-        - cross-python_${{ target_platform }}
-        - python
-        - numpy
     - ${{ stdlib("c") }}
-    - cmake
-    - llvmdev
     - if: cuda_compiler_version != "None"
       then:
+        - ${{ compiler('cuda') }}
         - cuda-cudart-dev
         - cuda-nvrtc-dev
         - cuda-nvrtc-static
@@ -43,6 +35,13 @@ requirements:
         - libmathdx-static
         - if: win
           then: cuda-cudart-static
+    - if: build_platform != target_platform
+      then:
+        - cross-python_${{ target_platform }}
+        - python
+        - numpy
+    - cmake
+    - llvmdev
     - ninja
   host:
     - if: cuda_compiler_version != "None"
