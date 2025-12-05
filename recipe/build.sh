@@ -6,7 +6,7 @@ if [[ "${cuda_compiler_version:-None}" != "None" ]]; then
     export LIBMATHDX_HOME="${BUILD_PREFIX}"
     export LIBRARY_PATH="${BUILD_PREFIX}/targets/x86_64-linux/lib:${LIBRARY_PATH}"
     export ARGS="--cuda_path ${BUILD_PREFIX}/targets/x86_64-linux"
-    export NVCC_APPEND_FLAGS="-I${BUILD_PREFIX}/include/cccl -I${BUILD_PREFIX}/targets/x86_64-linux/include"
+    export NVCC_APPEND_FLAGS="-I${BUILD_PREFIX}/targets/x86_64-linux/include/cccl -I${BUILD_PREFIX}/targets/x86_64-linux/include"
 fi
 
 # Make sure nvvm tools are found by nvcc
