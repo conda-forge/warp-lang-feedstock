@@ -41,7 +41,6 @@ requirements:
         - python
         - numpy
     - cmake
-    - llvmdev
     - ninja
   host:
     - if: cuda_compiler_version != "None"
