@@ -5,7 +5,7 @@ index 7a3727c2..4bcfdee7 100644
 @@ -298,6 +298,13 @@ def main(argv: list[str] | None = None) -> int:
      parser.add_argument("--no_fast_math", dest="fast_math", action="store_false")
      parser.set_defaults(fast_math=False)
- 
+
 +    parser.add_argument(
 +        "--use_dynamic_cuda",
 +        action="store_true",
@@ -15,15 +15,15 @@ index 7a3727c2..4bcfdee7 100644
 +
      parser.add_argument("--quick", action="store_true", help="Only generate PTX code")
      parser.set_defaults(quick=False)
- 
+
 diff --git a/warp/_src/build_dll.py b/warp/_src/build_dll.py
-index 92607bc7..c4ccfbcf 100644
+index 92607bc7..1659be18 100644
 --- a/warp/_src/build_dll.py
 +++ b/warp/_src/build_dll.py
 @@ -518,6 +518,10 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_paths, arch, libs: list[str
          libmathdx_includes = ""
          mathdx_enabled = "WP_ENABLE_MATHDX=0"
- 
+
 +    # Set CUDA_PATH environment variable for nvcc auto-detection (conda-forge, custom installations)
 +    if cu_paths:
 +        os.environ["CUDA_PATH"] = cuda_home
@@ -31,10 +31,10 @@ index 92607bc7..c4ccfbcf 100644
      if os.name == "nt":
          if args.host_compiler:
              host_linker = os.path.join(os.path.dirname(args.host_compiler), "link.exe")
-@@ -595,12 +599,29 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_paths, arch, libs: list[str
- 
+@@ -595,12 +599,31 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_paths, arch, libs: list[str
+
                      linkopts.append(quote(cu_out))
- 
+
 -                linkopts.append(
 -                    f'cudart_static.lib nvrtc_static.lib nvrtc-builtins_static.lib nvptxcompiler_static.lib ws2_32.lib user32.lib /LIBPATH:"{cuda_home}/lib/x64"'
 -                )
@@ -48,10 +48,12 @@ index 92607bc7..c4ccfbcf 100644
 +                    )
 +                else:
 +                    # Dynamic linking
++                    # Dynamic linking. nvptxcompiler_static is always used because
++                    # the dynamic version is not available in conda-forge
 +                    linkopts.append(
-+                        f'cudart.lib nvrtc.lib ws2_32.lib user32.lib /LIBPATH:"{cuda_home}/lib/x64"'
++                        f'cudart.lib nvrtc.lib nvptxcompiler_static.lib ws2_32.lib user32.lib /LIBPATH:"{cuda_home}/lib/x64"'
 +                    )
- 
+
                  if args.libmathdx_path:
 -                    linkopts.append(f'nvJitLink_static.lib /LIBPATH:"{args.libmathdx_path}/lib/x64" mathdx_static.lib')
 +                    if not getattr(args, "use_dynamic_cuda", False):
@@ -62,13 +64,23 @@ index 92607bc7..c4ccfbcf 100644
 +                        linkopts.append(
 +                            f'nvJitLink.lib /LIBPATH:"{args.libmathdx_path}/lib/x64" mathdx.lib'
 +                        )
- 
+
              if args.jobs <= 1:
                  with ScopedTimer("build_cuda", active=args.verbose):
-@@ -702,12 +723,33 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_paths, arch, libs: list[str
- 
+@@ -685,6 +708,9 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_paths, arch, libs: list[str
+                     _nvcc_opts = [
+                         opt.replace("@filename@", os.path.basename(cu_path).replace(".", "_")) for opt in nvcc_opts
+                     ]
++
++                    # CUDA 13+ moves CUB into CCCL
++                    _nvcc_opts.append(f'-I"{cuda_home}/include/cccl"')
+
+                     if cuda_compiler == "nvcc":
+                         if mode == "debug":
+@@ -702,12 +728,33 @@ def build_dll_for_arch(args, dll_path, cpp_paths, cu_paths, arch, libs: list[str
+
                      ld_inputs.append(quote(cu_out))
- 
+
 -                ld_inputs.append(
 -                    f'-L"{cuda_home}/lib64" -lcudart_static -lnvrtc_static -lnvrtc-builtins_static -lnvptxcompiler_static -lpthread -ldl -lrt'
 -                )
@@ -89,7 +101,7 @@ index 92607bc7..c4ccfbcf 100644
 +                        f'-L"{cuda_home}/lib64" -L"{cuda_home}/lib" '
 +                        "-lcudart -lnvrtc -lnvptxcompiler_static -lpthread -ldl -lrt"
 +                    )
- 
+
                  if args.libmathdx_path:
 -                    ld_inputs.append(f"-lnvJitLink_static -L{args.libmathdx_path}/lib -lmathdx_static")
 +                    if not getattr(args, "use_dynamic_cuda", False):
@@ -100,6 +112,6 @@ index 92607bc7..c4ccfbcf 100644
 +                        ld_inputs.append(
 +                            f"-lnvJitLink -L{args.libmathdx_path}/lib -lmathdx"
 +                        )
- 
+
              if args.jobs <= 1:
                  with ScopedTimer("build_cuda", active=args.verbose):
