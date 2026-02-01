@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
-  version: "1.11.0"
+  version: "1.11.1"
 
 package:
   name: "warp-lang"
@@ -8,7 +8,7 @@ package:
 
 source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v${{ version }}.zip
-  sha256: 563fc6d9a8966deda2a4cbdd713a7b52b1c7f03dfc6b4e06fcd727bccb26014b
+  sha256: f18e54aeda75f4e7cf76cd4f4561ce5dafcc5478a78c39fead54368d94bb39e5
   patches:
     - 01-avoid_static_cuda_libs.patch
 
