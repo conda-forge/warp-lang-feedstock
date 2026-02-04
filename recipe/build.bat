@@ -4,7 +4,7 @@ if not "%CUDA_COMPILER_VERSION%" == "None" (
     set NVCC_APPEND_FLAGS=--use-local-env
     set LIBMATHDX_HOME=%BUILD_PREFIX%
     set "LIB=%CONDA_PREFIX%\Library\lib;%LIB%"
-    set ARGS=--cuda_path=%CONDA_PREFIX%/Library
+    set ARGS=--cuda-path=%CONDA_PREFIX%/Library
 )
 
 @REM Force packman to use system python
