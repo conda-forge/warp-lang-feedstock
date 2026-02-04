@@ -2,7 +2,7 @@
 
 if not "%CUDA_COMPILER_VERSION%" == "None" (
     set NVCC_APPEND_FLAGS=--use-local-env
-    set LIBMATHDX_HOME=%BUILD_PREFIX%
+    set LIBMATHDX_HOME=%BUILD_PREFIX%/Library
     set "LIB=%CONDA_PREFIX%\Library\lib;%LIB%"
     set ARGS=--cuda-path=%CONDA_PREFIX%/Library
 )
