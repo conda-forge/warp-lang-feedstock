@@ -1,20 +1,20 @@
-bot:
-  inspection: update-grayskull
-github:
-  branch_name: main
-  tooling_branch_name: main
-conda_build:
-  error_overlinking: true
-conda_forge_output_validation: true
 azure:
-  free_disk_space: True
+  free_disk_space: true
   settings_win:
     variables:
       CONDA_BLD_PATH: C:\\bld\\
       MINIFORGE_HOME: C:\\Miniforge
       SET_PAGEFILE: 'True'
-conda_install_tool: pixi
-conda_build_tool: rattler-build
+bot:
+  inspection: update-grayskull
 build_platform:
   osx_arm64: osx_64
+conda_build:
+  error_overlinking: true
+conda_build_tool: rattler-build
+conda_forge_output_validation: true
+conda_install_tool: pixi
+github:
+  branch_name: main
+  tooling_branch_name: main
 test: native
