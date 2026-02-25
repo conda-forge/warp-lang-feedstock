@@ -13,7 +13,7 @@ source:
     - 01-avoid_static_cuda_libs.patch
 
 build:
-  number: 1
+  number: 2
   string: ${{ "cpu" if cuda_compiler_version == "None" else "cuda" + (cuda_compiler_version | replace('.', '')) }}_h${{ hash }}_${{ build }}
   skip: (osx and x86_64)
 
