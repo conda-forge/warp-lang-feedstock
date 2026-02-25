@@ -59,8 +59,6 @@ requirements:
         - cuda-nvrtc
         - libnvjitlink
         - libmathdx
-    - if: unix
-      then: jax
     - python
 
 tests:
