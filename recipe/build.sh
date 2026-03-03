@@ -11,13 +11,19 @@ if [[ "${cuda_compiler_version:-None}" != "None" ]]; then
 
     cuda_target_prefix="${BUILD_PREFIX}/targets/${cuda_target_dir}"
     cuda_target_include="${cuda_target_prefix}/include"
+    libmathdx_prefix="${BUILD_PREFIX}"
 
-    # CUDA target files live under BUILD_PREFIX/targets, while conda-forge installs
-    # MathDx into PREFIX/include and PREFIX/lib. Expose both via normal search paths
-    # instead of reshaping the filesystem with header/library symlinks.
+    # Native builds consume libmathdx from BUILD_PREFIX. Cross-builds also need the
+    # target-architecture package in PREFIX because Warp links against target libs.
+    if [[ "${build_platform:-}" != "${target_platform:-}" ]]; then
+        libmathdx_prefix="${PREFIX}"
+    fi
+
+    # CUDA target files live under BUILD_PREFIX/targets, while MathDx installs its
+    # headers and libraries at the top level of the selected prefix.
     export WARP_CUDA_PATH="${cuda_target_prefix}"
-    export LIBMATHDX_HOME="${PREFIX}"
-    export LIBRARY_PATH="${PREFIX}/lib:${cuda_target_prefix}/lib${LIBRARY_PATH:+:${LIBRARY_PATH}}"
+    export LIBMATHDX_HOME="${libmathdx_prefix}"
+    export LIBRARY_PATH="${libmathdx_prefix}/lib:${cuda_target_prefix}/lib${LIBRARY_PATH:+:${LIBRARY_PATH}}"
     export NVCC_APPEND_FLAGS="${NVCC_APPEND_FLAGS:-} -I${cuda_target_include}/cccl -I${cuda_target_include}"
 fi
 
