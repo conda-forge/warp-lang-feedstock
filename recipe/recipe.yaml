@@ -13,7 +13,7 @@ source:
     - 01-avoid_static_cuda_libs.patch
 
 build:
-  number: 3
+  number: 4
   string: ${{ "cpu" if cuda_compiler_version == "None" else "cuda" + (cuda_compiler_version | replace('.', '')) }}_py${{ python | version_to_buildstring }}h${{ hash }}_${{ build_number }}
   variant:
     use_keys:
@@ -50,6 +50,11 @@ requirements:
     - if: cuda_compiler_version != "None"
       then:
         - cuda-version ${{ cuda_compiler_version }}.*
+    - if: cuda_compiler_version != "None" and build_platform != target_platform
+      then:
+        - cuda-nvrtc-dev
+        - libnvjitlink-dev
+        - libmathdx-dev
     - python
     - pip
     - setuptools
