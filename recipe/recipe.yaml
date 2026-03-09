@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
-  version: "1.11.1"
+  version: "1.12.0"
 
 package:
   name: "warp-lang"
@@ -8,12 +8,12 @@ package:
 
 source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v${{ version }}.zip
-  sha256: f18e54aeda75f4e7cf76cd4f4561ce5dafcc5478a78c39fead54368d94bb39e5
+  sha256: 93d109de149bbb7ef3d8a6216b3e6d8804ad9aa590a0d98b36636918ec196118
   patches:
     - 01-avoid_static_cuda_libs.patch
 
 build:
-  number: 4
+  number: 0
   string: ${{ "cpu" if cuda_compiler_version == "None" else "cuda" + (cuda_compiler_version | replace('.', '')) }}_py${{ python | version_to_buildstring }}h${{ hash }}_${{ build_number }}
   variant:
     use_keys:
@@ -50,11 +50,11 @@ requirements:
     - if: cuda_compiler_version != "None"
       then:
         - cuda-version ${{ cuda_compiler_version }}.*
-    - if: cuda_compiler_version != "None" and build_platform != target_platform
-      then:
-        - cuda-nvrtc-dev
-        - libnvjitlink-dev
-        - libmathdx-dev
+        - if: build_platform != target_platform
+          then:
+            - cuda-nvrtc-dev
+            - libnvjitlink-dev
+            - libmathdx-dev
     - python
     - pip
     - setuptools
