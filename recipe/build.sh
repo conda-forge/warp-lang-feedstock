@@ -55,6 +55,6 @@ EOF
     export PATH="${PWD}/.warp-build-tools:${PATH}"
 fi
 
-${PYTHON} build_lib.py -j${CPU_COUNT} --use_dynamic_cuda
+${PYTHON} build_lib.py -j${CPU_COUNT} --use-dynamic-cuda
 
 ${PYTHON} -m pip install . -vv --no-deps --no-build-isolation --no-cache-dir
