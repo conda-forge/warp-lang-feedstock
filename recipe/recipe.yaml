@@ -31,7 +31,6 @@ requirements:
         - ${{ compiler('cuda') }}
         - cuda-cudart-dev
         - cuda-nvrtc-dev
-        - cuda-nvrtc-static
         - libnvjitlink-dev
         - libnvjitlink-static
         - libnvptxcompiler-dev
