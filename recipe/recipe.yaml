@@ -29,15 +29,6 @@ requirements:
     - if: cuda_compiler_version != "None"
       then:
         - ${{ compiler('cuda') }}
-        - cuda-cudart-dev
-        - cuda-nvrtc-dev
-        - libnvjitlink-dev
-        - libnvjitlink-static
-        - libnvptxcompiler-dev
-        - libmathdx-dev
-        - libmathdx-static
-        - if: win
-          then: cuda-cudart-static
     - if: build_platform != target_platform
       then:
         - cross-python_${{ target_platform }}
@@ -49,11 +40,15 @@ requirements:
     - if: cuda_compiler_version != "None"
       then:
         - cuda-version ${{ cuda_compiler_version }}.*
-    - if: cuda_compiler_version != "None" and build_platform != target_platform
-      then:
+        - cuda-cudart-dev
         - cuda-nvrtc-dev
         - libnvjitlink-dev
+        - libnvjitlink-static
+        - libnvptxcompiler-dev
         - libmathdx-dev
+        - libmathdx-static
+        - if: win
+          then: cuda-cudart-static
     - python
     - pip
     - setuptools
