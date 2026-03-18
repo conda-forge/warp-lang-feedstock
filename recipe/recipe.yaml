@@ -50,11 +50,11 @@ requirements:
     - if: cuda_compiler_version != "None"
       then:
         - cuda-version ${{ cuda_compiler_version }}.*
-    - if: cuda_compiler_version != "None" and build_platform != target_platform
-      then:
-        - cuda-nvrtc-dev
-        - libnvjitlink-dev
-        - libmathdx-dev
+        - if: build_platform != target_platform
+          then:
+            - cuda-nvrtc-dev
+            - libnvjitlink-dev
+            - libmathdx-dev
     - python
     - pip
     - setuptools
