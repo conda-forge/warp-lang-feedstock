@@ -63,10 +63,7 @@ requirements:
     - if: cuda_compiler_version != "None"
       then:
         - __cuda
-        - cuda-cudart
-        - cuda-nvrtc
         - ${{ pin_compatible('libnvjitlink', upper_bound='x.x') }}
-        - libmathdx
     - python
 
 tests:
