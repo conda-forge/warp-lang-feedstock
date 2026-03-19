@@ -13,7 +13,7 @@ source:
     - 01-avoid_static_cuda_libs.patch
 
 build:
-  number: 0
+  number: 1
   string: ${{ "cpu" if cuda_compiler_version == "None" else "cuda" + (cuda_compiler_version | replace('.', '')) }}_py${{ python | version_to_buildstring }}h${{ hash }}_${{ build_number }}
   variant:
     use_keys:
@@ -29,16 +29,6 @@ requirements:
     - if: cuda_compiler_version != "None"
       then:
         - ${{ compiler('cuda') }}
-        - cuda-cudart-dev
-        - cuda-nvrtc-dev
-        - cuda-nvrtc-static
-        - libnvjitlink-dev
-        - libnvjitlink-static
-        - libnvptxcompiler-dev
-        - libmathdx-dev
-        - libmathdx-static
-        - if: win
-          then: cuda-cudart-static
     - if: build_platform != target_platform
       then:
         - cross-python_${{ target_platform }}
@@ -50,24 +40,26 @@ requirements:
     - if: cuda_compiler_version != "None"
       then:
         - cuda-version ${{ cuda_compiler_version }}.*
-    - if: cuda_compiler_version != "None" and build_platform != target_platform
-      then:
+        - cuda-cudart-dev
         - cuda-nvrtc-dev
-        - libnvjitlink-dev
+        - libnvjitlink-dev ${{ cuda_compiler_version }}.* # See https://github.com/conda-forge/warp-lang-feedstock/issues/94
+        - libnvptxcompiler-dev
         - libmathdx-dev
     - python
     - pip
     - setuptools
     - gitpython
     - numpy
+  ignore_run_exports:
+    from_package:
+      # Prevent auto run_export, we pin it manually below
+      # See https://github.com/conda-forge/warp-lang-feedstock/issues/94
+      - libnvjitlink-dev
   run:
     - if: cuda_compiler_version != "None"
       then:
         - __cuda
-        - cuda-cudart
-        - cuda-nvrtc
-        - libnvjitlink
-        - libmathdx
+        - ${{ pin_compatible('libnvjitlink', upper_bound='x.x') }}
     - python
 
 tests:
@@ -76,7 +68,7 @@ tests:
         - warp
   - script:
       - pip check
-    # Testing main functionalities to avoid OOM errors
+      # Testing main functionalities to avoid OOM errors
       - python -m warp.tests -s autodetect -p "test_c*.py" -p "test_m*.py" -p "test_s*.py"
       - if: cuda_compiler_version != "None" and linux
         then: python -c "import warp; warp.init(); exit(not warp.context.runtime.core.wp_is_mathdx_enabled())"
