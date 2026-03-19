@@ -54,13 +54,18 @@ requirements:
     - setuptools
     - gitpython
     - numpy
+  ignore_run_exports:
+    from_package:
+      # Prevent auto run_export, we pin it manually below
+      # See https://github.com/conda-forge/warp-lang-feedstock/issues/94
+      - libnvjitlink-dev
   run:
     - if: cuda_compiler_version != "None"
       then:
         - __cuda
         - cuda-cudart
         - cuda-nvrtc
-        - libnvjitlink
+        - ${{ pin_compatible('libnvjitlink', upper_bound='x.x') }}
         - libmathdx
     - python
 
