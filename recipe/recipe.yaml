@@ -42,28 +42,18 @@ requirements:
         - cuda-version ${{ cuda_compiler_version }}.*
         - cuda-cudart-dev
         - cuda-nvrtc-dev
-        - libnvjitlink-dev ${{ cuda_compiler_version }}.*
-        - libnvjitlink-static ${{ cuda_compiler_version }}.*
+        - libnvjitlink-dev ${{ cuda_compiler_version }}.* # See https://github.com/conda-forge/warp-lang-feedstock/issues/94
         - libnvptxcompiler-dev
         - libmathdx-dev
-        - libmathdx-static
-        - if: win
-          then: cuda-cudart-static
     - python
     - pip
     - setuptools
     - gitpython
     - numpy
-  ignore_run_exports:
-    from_package:
-      # Prevent auto run_export, we pin it manually below
-      # See https://github.com/conda-forge/warp-lang-feedstock/issues/94
-      - libnvjitlink-dev
   run:
     - if: cuda_compiler_version != "None"
       then:
         - __cuda
-        - ${{ pin_compatible('libnvjitlink', upper_bound='x.x') }}
     - python
 
 tests:
@@ -72,7 +62,7 @@ tests:
         - warp
   - script:
       - pip check
-    # Testing main functionalities to avoid OOM errors
+      # Testing main functionalities to avoid OOM errors
       - python -m warp.tests -s autodetect -p "test_c*.py" -p "test_m*.py" -p "test_s*.py"
       - if: cuda_compiler_version != "None" and linux
         then: python -c "import warp; warp.init(); exit(not warp.context.runtime.core.wp_is_mathdx_enabled())"
