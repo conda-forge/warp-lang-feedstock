@@ -12,6 +12,9 @@ if [[ "${cuda_compiler_version:-None}" != "None" ]]; then
     cuda_target_prefix="${PREFIX}/targets/${cuda_target_dir}"
     cuda_target_include="${cuda_target_prefix}/include"
 
+    # Include crt/ from BUILD_PREFIX
+    export CPATH="${BUILD_PREFIX}/targets/${cuda_target_dir}/include${CPATH:+:${CPATH}}"
+
     # CUDA target files live under PREFIX/targets, while MathDx installs its
     # headers and libraries at the top level of the selected prefix.
     export WARP_CUDA_PATH="${cuda_target_prefix}"
