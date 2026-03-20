@@ -9,7 +9,6 @@ bot:
   inspection: update-grayskull
 build_platform:
   linux_aarch64: linux_64
-  osx_arm64: osx_64
 conda_build:
   error_overlinking: true
 conda_build_tool: rattler-build
@@ -20,4 +19,4 @@ github:
   tooling_branch_name: main
 provider:
   osx_arm64: default
-test: native_and_emulated
+test: native
