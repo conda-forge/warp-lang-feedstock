@@ -1,6 +1,8 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
   version: "1.12.0"
+  # ensure arm_variant_type gets detected as a used variable
+  touch_arm_variant_type: ${{ arm_variant_type | default("") }}
 
 package:
   name: "warp-lang"
@@ -13,7 +15,7 @@ source:
     - 01-avoid_static_cuda_libs.patch
 
 build:
-  number: 1
+  number: 2
   string: ${{ "cpu" if cuda_compiler_version == "None" else "cuda" + (cuda_compiler_version | replace('.', '')) }}_py${{ python | version_to_buildstring }}h${{ hash }}_${{ build_number }}
   variant:
     use_keys:
