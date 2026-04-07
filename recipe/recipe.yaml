@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
-  version: "1.12.0"
+  version: "1.12.1"
   # ensure arm_variant_type gets detected as a used variable
   touch_arm_variant_type: ${{ arm_variant_type | default("") }}
 
@@ -10,12 +10,12 @@ package:
 
 source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v${{ version }}.zip
-  sha256: 93d109de149bbb7ef3d8a6216b3e6d8804ad9aa590a0d98b36636918ec196118
+  sha256: 257cf99fe22bf46cde5c8bfa0307a669900af8f368753b257e62368f3fb75706
   patches:
     - 01-avoid_static_cuda_libs.patch
 
 build:
-  number: 2
+  number: 0
   string: ${{ "cpu" if cuda_compiler_version == "None" else "cuda" + (cuda_compiler_version | replace('.', '')) }}_py${{ python | version_to_buildstring }}h${{ hash }}_${{ build_number }}
   variant:
     use_keys:
