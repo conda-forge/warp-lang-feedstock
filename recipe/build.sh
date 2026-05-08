@@ -26,16 +26,12 @@ fi
 # Make sure nvvm tools are found by nvcc
 export PATH="$PATH:$CONDA_PREFIX/nvvm/bin"
 
-# PM_PYTHON_EXT tells Packman to use conda's Python instead of downloading its own.
-# Packman runs on the build machine and invokes Python with `-S -s -u -E`, which bypasses
-# parts of conda-forge's cross-python wrapper setup. For cross-builds use the installed
-# build-machine interpreter from BUILD_PREFIX directly, not the crossenv venv entrypoint.
-if [[ "${target_platform}" == linux-* ]]; then
-    packman_python="${PYTHON}"
-    if [[ "${build_platform:-}" != "${target_platform:-}" && -n "${PY_VER:-}" && -x "${BUILD_PREFIX}/bin/python${PY_VER}" ]]; then
-        packman_python="${BUILD_PREFIX}/bin/python${PY_VER}"
-    fi
-    export PM_PYTHON_EXT="${packman_python}"
+# build_llvm.py overrides PM_PYTHON_EXT with sys.executable in the packman
+# subprocess env. During cross-compilation, sys.executable is the crossenv
+# wrapper that cannot import native modules like binascii. After patch 02
+# we only need to override it for cross-builds.
+if [[ "${build_platform:-}" != "${target_platform:-}" ]]; then
+    export PM_PYTHON_EXT="${BUILD_PREFIX}/bin/python${PY_VER}"
 fi
 
 # Warp invokes `strip` directly when producing warp.so. During cross-compilation that resolves
