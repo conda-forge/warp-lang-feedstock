@@ -1,0 +1,30 @@
+From ab777ef0b7c98cecf43b4496f88dd6269630d064 Mon Sep 17 00:00:00 2001
+From: Filippo Luca Ferretti <filippoluca.ferretti@outlook.com>
+Date: Fri, 8 May 2026 18:06:56 +0200
+Subject: [PATCH] build_llvm: respect PM_PYTHON_EXT if already set
+
+During conda-forge cross-compilation (e.g. aarch64 SBSA built on
+x86_64), sys.executable points to the crossenv wrapper whose host-
+architecture stdlib cannot import native C extension modules such as
+binascii. In this way we honour a pre-existing PM_PYTHON_EXT so the
+build system can point packman at the build-platform Python instead.
+---
+ build_llvm.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build_llvm.py b/build_llvm.py
+index f3b1d7e..aa0ced2 100644
+--- a/build_llvm.py
++++ b/build_llvm.py
+@@ -44,7 +44,7 @@ def fetch_prebuilt_libraries(arch):
+
+     # Reuse the current interpreter so packman skips downloading its bundled Python,
+     # whose manylinux_2_35 build can't run on older-glibc CI images.
+-    packman_env = {**os.environ, "PM_PYTHON_EXT": sys.executable}
++    packman_env = {"PM_PYTHON_EXT": sys.executable, **os.environ}
+
+     packman_cmd = [
+         packman,
+--
+2.53.0
+
