@@ -12,8 +12,7 @@ source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v${{ version }}.zip
   sha256: e5525b124edbba969fac6ad9bf86742768e348feba2dd1a9e465068f6de14eea
   patches:
-    - 01-avoid_static_cuda_libs.patch
-    - 02-respect_pm_python_ext.patch
+    - 01-respect_pm_python_ext.patch
 
 build:
   number: 0
