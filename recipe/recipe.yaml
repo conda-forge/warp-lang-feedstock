@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
-  version: "1.14.0"
+  version: "1.15.0"
   # ensure arm_variant_type gets detected as a used variable
   touch_arm_variant_type: ${{ arm_variant_type | default("") }}
 
@@ -10,7 +10,7 @@ package:
 
 source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v${{ version }}.zip
-  sha256: e5525b124edbba969fac6ad9bf86742768e348feba2dd1a9e465068f6de14eea
+  sha256: d6f9a2dc675391471edd31cea6d233bc9163b7e9454f7c0840800318983a19ac
   patches:
     - 01-respect_pm_python_ext.patch
 
