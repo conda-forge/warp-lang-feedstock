@@ -15,7 +15,7 @@ source:
     - 01-respect_pm_python_ext.patch
 
 build:
-  number: 0
+  number: 1
   string: ${{ "cpu" if cuda_compiler_version == "None" else "cuda" + (cuda_compiler_version | replace('.', '')) }}_py${{ python | version_to_buildstring }}h${{ hash }}_${{ build_number }}
   variant:
     use_keys:
