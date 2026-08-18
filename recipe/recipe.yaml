@@ -10,7 +10,7 @@ package:
 
 source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v${{ version }}.zip
-  sha256: 4b491969900cc0ed014b3f9af0fbb5c966e215e286b5c2ff8fc6b0fe217c25f3
+  sha256: 9003931e634942f859db07af6f7bbb5c896acb875e7835d4b6f55330b7405613
 
 build:
   number: 0
