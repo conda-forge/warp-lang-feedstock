@@ -1,0 +1,26 @@
+From 7de00bbd342f61ec4f7e2a969bc74c5d57b10292 Mon Sep 17 00:00:00 2001
+From: Filippo Luca Ferretti <filippoluca.ferretti@outlook.com>
+Date: Mon, 31 Aug 2026 11:23:00 +0200
+Subject: [PATCH] Ignore glibc 2.32+ symbols in warp-clang.so undefined check
+
+Prebuilt LLVM/Clang static libraries reference `mallinfo2` and `__libc_single_threaded`.
+Since CF compiles targeting older glibc versions, these symbols are undefined.
+This patch ignores them during the dynamic symbol check.
+
+---
+ warp/_src/build_dll.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/warp/_src/build_dll.py b/warp/_src/build_dll.py
+--- a/warp/_src/build_dll.py
++++ b/warp/_src/build_dll.py
+@@ -970,6 +970,7 @@
+                     if len(fields) < 8:
+                         continue
+                     sym_type, sym_bind, sym_ndx, sym_name = fields[3], fields[4], fields[6], fields[7]
+                     if sym_bind == "GLOBAL" and sym_ndx == "UND" and sym_type == "NOTYPE":
+-                        undefined.append(sym_name)
++                        if sym_name not in ["mallinfo2", "__libc_single_threaded"]:
++                            undefined.append(sym_name)
+ 
+             if undefined:

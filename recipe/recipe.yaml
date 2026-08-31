@@ -11,6 +11,8 @@ package:
 source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v${{ version }}.zip
   sha256: 7dc0cfcbe68a3054e878181d666d9b6e0bb9ae8ad9dd63dce5a9f709f0572c93
+  patches:
+    - 0001-ignore-undefined-symbols.patch
 
 build:
   number: 0
