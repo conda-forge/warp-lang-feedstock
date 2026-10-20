@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
-  version: "1.17.0"
+  version: "1.18.0"
   # ensure arm_variant_type gets detected as a used variable
   touch_arm_variant_type: ${{ arm_variant_type | default("") }}
 
@@ -10,12 +10,12 @@ package:
 
 source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v${{ version }}.zip
-  sha256: 7dc0cfcbe68a3054e878181d666d9b6e0bb9ae8ad9dd63dce5a9f709f0572c93
+  sha256: a0491eb50e620b721627fd1c50e89692af96be0fb34cf30737e6bfca5de924c6
   patches:
-    - 0001-ignore-undefined-symbols.patch
+    - 0001-glibc-compat.patch
 
 build:
-  number: 2
+  number: 0
   string: ${{ "cpu" if cuda_compiler_version == "None" else "cuda" + (cuda_compiler_version | replace('.', '')) }}_py${{ python | version_to_buildstring }}h${{ hash }}_${{ build_number }}
   variant:
     use_keys:
