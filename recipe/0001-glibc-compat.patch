@@ -1,0 +1,78 @@
+From 08d9c969f4c4d4bc6d6c00f29848e4edfd27f3d7 Mon Sep 17 00:00:00 2001
+From: "Filippo Luca Ferretti <filippoluca.ferretti@outlook.com>
+Date: Tue, 20 Oct 2026 12:50:50 +0000
+Subject: [PATCH] Resolve newer LLVM glibc references on older conda-forge sysroots
+
+The prebuilt LLVM archives reference mallinfo2 (glibc 2.33) and
+__libc_single_threaded (glibc 2.32). Replace the earlier
+0001-ignore-undefined-symbols.patch workaround with private compatibility
+definitions. Ignoring the validation errors still leaves a library that
+cannot load on the older glibc baseline.
+
+Keep undefined-symbol validation enabled. Newer sysroots use their native
+glibc definitions and non-glibc platforms are unaffected.
+---
+ warp/native/crt.cpp | 47 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+
+diff --git a/warp/native/crt.cpp b/warp/native/crt.cpp
+index 4b39457..43be11e 100644
+--- a/warp/native/crt.cpp
++++ b/warp/native/crt.cpp
+@@ -7,6 +7,53 @@
+ #include <cstdio>
+ #include <cstdlib>
+ 
++#if defined(__linux__) && defined(__GLIBC__)
++#include <malloc.h>
++
++#if !__GLIBC_PREREQ(2, 32)
++extern "C" {
++// Always take libstdc++'s thread-safe path, even before a second thread exists.
++__attribute__((visibility("hidden"))) char __libc_single_threaded = 0;
++}
++#endif
++
++#if !__GLIBC_PREREQ(2, 33)
++struct mallinfo2
++{
++    size_t arena;
++    size_t ordblks;
++    size_t smblks;
++    size_t hblks;
++    size_t hblkhd;
++    size_t usmblks;
++    size_t fsmblks;
++    size_t uordblks;
++    size_t fordblks;
++    size_t keepcost;
++};
++
++extern "C" __attribute__((visibility("hidden"))) struct mallinfo2 mallinfo2() noexcept
++{
++    const struct mallinfo info = mallinfo();
++    // LLVM uses these for statistics. Retain mallinfo's legacy 32-bit limits
++    // without sign-extending overflowed counters to size_t.
++    const auto widen = [](int value) -> size_t { return static_cast<unsigned int>(value); };
++    return {
++        widen(info.arena),
++        widen(info.ordblks),
++        widen(info.smblks),
++        widen(info.hblks),
++        widen(info.hblkhd),
++        widen(info.usmblks),
++        widen(info.fsmblks),
++        widen(info.uordblks),
++        widen(info.fordblks),
++        widen(info.keepcost)
++    };
++}
++#endif
++#endif
++
+ #if defined(_MSC_VER)
+ #include <intrin.h>  // for __debugbreak()
+ #elif defined(__has_builtin)
+-- 
+Git
+
