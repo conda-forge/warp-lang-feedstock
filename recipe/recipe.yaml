@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/prefix-dev/recipe-format/main/schema.json
 context:
-  version: "1.18.0"
+  version: "1.19.0"
   # ensure arm_variant_type gets detected as a used variable
   touch_arm_variant_type: ${{ arm_variant_type | default("") }}
 
@@ -10,7 +10,7 @@ package:
 
 source:
   url: https://github.com/NVIDIA/warp/archive/refs/tags/v${{ version }}.zip
-  sha256: a0491eb50e620b721627fd1c50e89692af96be0fb34cf30737e6bfca5de924c6
+  sha256: 84b6b69498db04bc9fb46859827a34d16764a06df4ae5195674afebefb419788
   patches:
     - 0001-glibc-compat.patch
 
