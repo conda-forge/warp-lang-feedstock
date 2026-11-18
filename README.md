@@ -75,6 +75,13 @@ Current build status
                   <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/warp-lang-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_python3.15.____cp315" alt="variant">
                 </a>
               </td>
+            </tr><tr>
+              <td>osx_arm64_python3.15.____cp315t</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=20966&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/warp-lang-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_python3.15.____cp315t" alt="variant">
+                </a>
+              </td>
             </tr>
           </tbody>
         </table>
